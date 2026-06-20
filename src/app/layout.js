@@ -7,7 +7,7 @@ import { ThemeProvider } from "next-themes";
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 const geistMono = Geist_Mono({
@@ -24,18 +24,22 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      suppressHydrationWarning // Crucial for next-themes to suppress the initial mismatch warning
-      className={`${plusJakartaSans.variable} ${geistMono.variable} h-full font-sans antialiased`}
+      suppressHydrationWarning
+      className={`${plusJakartaSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-slate-50/40 text-slate-900 dark:bg-slate-950 dark:text-slate-50 transition-colors duration-200">
+      <body className="min-h-full font-sans bg-slate-50/60 text-slate-900 dark:bg-slate-950 dark:text-slate-50 transition-colors duration-200 relative flex flex-col">
         
-        {/* Soft purple/indigo gradient blur backdrop */}
-        <div className="absolute top-0 left-1/2 -z-10 h-[600px] w-full max-w-7xl -translate-x-1/2 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-violet-100/50 via-transparent to-transparent blur-3xl dark:from-violet-950/20 pointer-events-none" />
+        <div className="absolute inset-x-0 top-0 -z-10 h-200 w-full bg-bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-blue-100/40 via-slate-100/20 to-transparent blur-3xl dark:from-blue-950/20 dark:via-transparent pointer-events-none" />
 
-        {/* Placing ThemeProvider here allows next-themes to append its script safely to the <head> */}
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-          <Navbar />
-          <main className="flex-1">{children}</main>
+          <header className="sticky top-0 z-50 w-full backdrop-blur-md">
+            <Navbar />
+          </header>
+
+          <main className="flex-1 w-full relative z-10">
+            {children}
+          </main>
+
           <Footer />
         </ThemeProvider>
       </body>

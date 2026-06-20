@@ -1,5 +1,7 @@
 import Hero from "@/components/Hero";
 import Statistics from "@/components/Statistics";
+import Testimonials from "@/components/Testimonials";
+import WhyChooseUs from "@/components/WhyChooseUs";
 
 export default function Home() {
   const mockStatsData = {
@@ -11,6 +13,8 @@ export default function Home() {
     <div>
       <Hero />
       <Statistics stats={mockStatsData}/>
+      <WhyChooseUs />
+      <Testimonials />
     </div>
   );
 }

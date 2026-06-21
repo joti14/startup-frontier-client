@@ -3,6 +3,7 @@ import "./globals.css";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "next-themes";
+import { Toaster } from "react-hot-toast";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-sans",
@@ -39,7 +40,7 @@ export default function RootLayout({ children }) {
           <main className="flex-1 w-full relative z-10">
             {children}
           </main>
-
+          <Toaster />
           <Footer />
         </ThemeProvider>
       </body>

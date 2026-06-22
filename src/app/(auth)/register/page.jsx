@@ -11,22 +11,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import toast from "react-hot-toast";
+import { uploadToImgbb } from "@/utils/uploadImage";
 
-// ─── IMGBB UPLOAD HELPER ───
-async function uploadToImgbb(file) {
-  const formData = new FormData();
-  formData.append("image", file);
-
-  const res = await fetch(
-    `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API_KEY}`,
-    { method: "POST", body: formData }
-  );
-  if (!res.ok) throw new Error("Upload failed");
-  const data = await res.json();
-  return data.data.url;
-}
-
-// ─── PASSWORD RULE COMPONENT ──
+// PASSWORD RULE COMPONENT  
 function PasswordRule({ ok, label }) {
   return (
     <span className={`inline-flex items-center gap-1.5 text-[11px] font-medium transition-colors duration-200 ${ok ? "text-emerald-600 dark:text-emerald-400" : "text-slate-400 dark:text-slate-500"}`}>
@@ -77,18 +64,18 @@ export default function RegisterPage() {
     lower: /[a-z]/.test(password),
   };
   const allRulesPass = rules.length && rules.upper && rules.lower;
-  const isFormReady = firstName.trim() && lastName.trim() && email.includes("@") && allRulesPass && !isSubmitting;
+  const isFormReady = firstName.trim() && lastName.trim() && email.includes("@") && allRulesPass && !isSubmitting && photo.state !== "uploading";
 
   // ─── DYNAMIC LABELS FOR UPLOAD ZONE ──────────────────────────────────────
   const uploadLabel =
     photo.state === "uploading"
-      ? "Uploading asset stream..."
+      ? "Uploading..."
       : photo.state === "done"
       ? photo.file?.name?.length > 22
         ? photo.file.name.slice(0, 22) + "..."
         : photo.file?.name
       : photo.state === "error"
-      ? "Upload connection failed"
+      ? "Upload failed - try again"
       : "Choose photo or drag & drop";
 
   // ─── HANDLERS ────────────────────────────────────────────────────────────
@@ -96,43 +83,75 @@ export default function RegisterPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 2 * 1024 * 1024) return setSubmitError("Photo must be under 2 MB.");
-    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) return setSubmitError("Only JPG, PNG, or WEBP allowed.");
+    if (file.size > 2 * 1024 * 1024) {
+      setSubmitError("Photo must be under 2 MB.");
+      return;
+    }
+    
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      setSubmitError("Only JPG, PNG, or WEBP allowed.");
+      return;
+    }
 
     setSubmitError("");
     setPhoto({ file, preview: URL.createObjectURL(file), url: null, state: "uploading" });
 
     try {
-      const url = await uploadToImgbb(file);
+      console.log("Starting upload to ImgBB...");
+      const url = await uploadToImgbb(file);  
+      console.log("Upload successful, URL:", url);
       setPhoto((prev) => ({ ...prev, url, state: "done" }));
+      toast.success("Photo uploaded successfully");
     } catch (err) {
-      setPhoto((prev) => ({ ...prev, state: "error" }));
-      setSubmitError("Photo upload failed.");
+      console.error("Upload error:", err);
+      setPhoto((prev) => ({ ...prev, state: "error", url: null }));
+      setSubmitError(err.message || "Photo upload failed. Please try again.");
+      toast.error("Photo upload failed");
     }
   };
 
   const onSubmit = async (data) => {
-    console.log('data from form', data);
-    if (!isFormReady) return;
-    if (photo.state === "uploading") return setSubmitError("Please wait for photo upload.");
+    console.log('Form data:', data);
+    console.log('Photo state:', photo);
+    
+    if (!isFormReady) {
+      console.log('Form not ready');
+      return;
+    }
+    
+    if (photo.state === "uploading") {
+      setSubmitError("Please wait for photo upload to complete.");
+      return;
+    }
+
+    // If photo was selected but upload failed, don't proceed
+    if (photo.file && photo.state === "error") {
+      setSubmitError("Photo upload failed. Please try uploading again or remove the photo.");
+      return;
+    }
 
     setIsSubmitting(true);
     setSubmitError("");
 
     const fullName = `${data.firstName} ${data.lastName}`.trim();
+    const imageUrl = photo.url || "";
+    
+    console.log('Submitting with image URL:', imageUrl);
 
     const { error: authError } = await authClient.signUp.email({
       name: fullName,
       email: data.email.trim(),
       password: data.password,
       role: data.role,
-      image: photo.url ?? "",
+      image: imageUrl,
     });
 
     if (authError) {
+      console.error('Auth error:', authError);
       setSubmitError(authError.message ?? "Something went wrong.");
       setIsSubmitting(false);
     } else {
+      console.log('Account created successfully');
       toast.success('Successfully Created Account');
       router.push(data.role === "founder" ? "/dashboard/founder" : "/dashboard/collaborator");
     }
@@ -204,7 +223,7 @@ export default function RegisterPage() {
                 <button
                   type="button"
                   onClick={() => setValue("role", "founder")}
-                  className={`relative p-4 rounded-xl border-2 text-center transition-all duration-200 ${role === 'founder' ? 'border-[#635BFF] bg-[#EEF2FF] dark:bg-[#635BFF]/10' : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-white dark:bg-slate-900'}`}
+                  className={`relative p-4 rounded-xl border-2 text-center transition-all duration-200 ${role === 'founder' ? 'border-[#635BFF] bg-[#EEF2FF] dark:bg-[#635BFF]/10' : 'border-slate-200 cursor-pointer dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-white dark:bg-slate-900'}`}
                 >
                   <Rocket className={`w-5 h-5 mb-2 mx-auto ${role === 'founder' ? 'text-[#635BFF]' : 'text-slate-400'}`} />
                   <div className={`text-xs font-bold ${role === 'founder' ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-slate-300'}`}>Post a startup</div>
@@ -214,7 +233,7 @@ export default function RegisterPage() {
                 <button
                   type="button"
                   onClick={() => setValue("role", "collaborator")}
-                  className={`relative p-4 rounded-xl border-2 text-center transition-all duration-200 ${role === 'collaborator' ? 'border-[#635BFF] bg-[#EEF2FF] dark:bg-[#635BFF]/10' : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-white dark:bg-slate-900'}`}
+                  className={`relative p-4 rounded-xl border-2 text-center transition-all duration-200 ${role === 'collaborator' ? 'border-[#635BFF] bg-[#EEF2FF] dark:bg-[#635BFF]/10' : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 cursor-pointer dark:hover:border-slate-700 bg-white dark:bg-slate-900'}`}
                 >
                   <Users className={`w-5 h-5 mb-2 mx-auto ${role === 'collaborator' ? 'text-[#635BFF]' : 'text-slate-400'}`} />
                   <div className={`text-xs font-bold ${role === 'collaborator' ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-slate-300'}`}>Find opportunities</div>
@@ -271,18 +290,38 @@ export default function RegisterPage() {
               <Label className="text-xs font-semibold text-slate-700 dark:text-slate-400">Profile Photo <span className="text-slate-400 font-normal">(via imgbb)</span></Label>
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="flex items-center gap-3 px-4 py-3 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl cursor-pointer hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-200 bg-slate-50/50 dark:bg-slate-900/50"
+                className={`flex items-center gap-3 px-4 py-3 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-200 ${
+                  photo.state === "error" 
+                    ? "border-rose-300 dark:border-rose-900 bg-rose-50/50 dark:bg-rose-950/20" 
+                    : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50"
+                }`}
               >
-                <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center flex-shrink-0">
-                  {photo.preview ? <img src={photo.preview} alt="Avatar Preview" className="w-full h-full rounded-full object-cover" /> : <User className="h-5 w-5 text-slate-400" />}
+                <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                  {photo.preview ? (
+                    <img src={photo.preview} alt="Avatar Preview" className="w-full h-full object-cover" />
+                  ) : (
+                    <User className="h-5 w-5 text-slate-400" />
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs font-semibold text-[#635BFF] dark:text-[#818CF8]">
+                  <div className={`text-xs font-semibold ${
+                    photo.state === "error" 
+                      ? "text-rose-600 dark:text-rose-400" 
+                      : "text-[#635BFF] dark:text-[#818CF8]"
+                  }`}>
                     {uploadLabel}
                   </div>
                   <div className="text-[10px] text-slate-400">PNG, JPG, WEBP - max 2 MB</div>
                 </div>
-                <div className="text-[10px] font-medium text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-full">Optional</div>
+                {photo.state === "done" && (
+                  <div className="text-[10px] font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/30 px-2 py-1 rounded-full">✓ Uploaded</div>
+                )}
+                {photo.state === "uploading" && (
+                  <Loader2 className="h-4 w-4 animate-spin text-[#635BFF]" />
+                )}
+                {photo.state === "idle" && (
+                  <div className="text-[10px] font-medium text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-full">Optional</div>
+                )}
                 <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handlePhotoChange} />
               </div>
             </div>
@@ -327,13 +366,18 @@ export default function RegisterPage() {
             {/* Submit Button */}
             <Button
               type="submit"
-              disabled={!isFormReady}
-              className={`w-full py-3 rounded-xl font-bold text-xs tracking-wider transition-all duration-200 flex items-center justify-center gap-2 shadow-sm h-auto ${isFormReady ? "bg-slate-950 dark:bg-white text-white dark:text-slate-950 hover:bg-slate-900 dark:hover:bg-slate-50 hover:shadow-md active:scale-[0.995]" : "bg-slate-100 text-slate-400 dark:bg-slate-900 dark:text-slate-600 cursor-not-allowed"}`}
+              disabled={!isFormReady || photo.state === "uploading"}
+              className={`w-full py-3 rounded-xl font-bold text-xs tracking-wider transition-all duration-200 flex items-center justify-center gap-2 shadow-sm h-auto ${isFormReady && photo.state !== "uploading" ? "bg-slate-950 dark:bg-white text-white dark:text-slate-950 hover:bg-slate-900 dark:hover:bg-slate-50 hover:shadow-md active:scale-[0.995]" : "bg-slate-100 text-slate-400 dark:bg-slate-900 dark:text-slate-600 cursor-not-allowed"}`}
             >
               {isSubmitting ? (
                 <>
                   <Loader2 className="animate-spin w-4 h-4" />
                   <span>Creating Account...</span>
+                </>
+              ) : photo.state === "uploading" ? (
+                <>
+                  <Loader2 className="animate-spin w-4 h-4" />
+                  <span>Uploading Photo...</span>
                 </>
               ) : (
                 <>

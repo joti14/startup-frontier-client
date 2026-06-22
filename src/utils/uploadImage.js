@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 // IMGBB UPLOAD 
 export async function uploadToImgbb(file) {
   const formData = new FormData();

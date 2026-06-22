@@ -77,14 +77,12 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen bg-slate-50 dark:bg-[#090d16] flex items-center justify-center px-4 py-12 relative overflow-hidden">
-      {/* Soft Ambient Background Glows */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute top-[-5%] right-[-5%] w-[40rem] h-[40rem] rounded-full bg-indigo-100/40 dark:bg-indigo-950/10 blur-[120px]" />
         <div className="absolute bottom-[-5%] left-[-5%] w-[40rem] h-[40rem] rounded-full bg-purple-100/30 dark:bg-purple-950/10 blur-[120px]" />
       </div>
 
       <div className="w-full max-w-[420px] relative z-10 group">
-        {/* Card Wrapper */}
         <div className="bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-900 rounded-3xl p-8 shadow-sm transition-all duration-300 group-hover:shadow-md group-hover:border-slate-200/60 dark:group-hover:border-slate-800/60">
           
           {/* Logo Branding */}

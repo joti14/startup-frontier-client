@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import {
     Sun,
@@ -23,20 +23,24 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { authClient, useSession } from "@/lib/auth-client";
 
 export default function Navbar() {
     const pathname = usePathname();
+    const router = useRouter();
     const { theme, setTheme } = useTheme();
+    const { data: session } = useSession();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [mounted, setMounted] = useState(false);
 
-    // Prevent initial theme hydration flash mismatches
     useEffect(() => {
         setMounted(true);
     }, []);
 
-    const [user, setUser] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
+    const handleLogout = async () => {
+        await authClient.signOut();
+        router.push("/");
+    };
 
     const navigationLinks = [
         { name: "Home", href: "/" },
@@ -81,6 +85,20 @@ export default function Navbar() {
                                 </Link>
                             );
                         })}
+                        {session?.user && (
+                            <Link
+                                href={`/dashboard/${session.user.role}`}
+                                className={`text-[13px] font-medium tracking-wide transition-colors relative py-1 ${pathname.startsWith("/dashboard")
+                                        ? "text-slate-950 dark:text-white font-semibold"
+                                        : "text-slate-500 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white"
+                                    }`}
+                            >
+                                Dashboard
+                                {pathname.startsWith("/dashboard") && (
+                                    <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-slate-950 dark:bg-white rounded-full animate-in fade-in zoom-in duration-300" />
+                                )}
+                            </Link>
+                        )}
                     </div>
 
                     {/* Right Side: Trendy Rounded Actions */}
@@ -100,57 +118,61 @@ export default function Navbar() {
                                 </Button>
 
                                 {/* Dynamic Auth View */}
-                                {isLoading ? (
-                                    <div className="text-xs font-medium text-slate-400 animate-pulse bg-slate-100 dark:bg-slate-900 px-3 py-1 rounded-full">Loading...</div>
-                                ) : user ? (
-                                    /* Custom Floating Dropdown Menu Component matching Image Reference */
+                                {session?.user ? (
+                                    /* Custom Floating Dropdown Menu Component */
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
                                             <Button variant="ghost" className="relative flex items-center gap-2 rounded-full pl-1.5 pr-3 py-1.5 h-9 hover:bg-slate-100 dark:hover:bg-slate-900 focus-visible:ring-0">
                                                 <Avatar className="h-6 w-6 border border-slate-200 dark:border-slate-800">
-                                                    <AvatarImage src={user.image} alt={user.name} />
+                                                    <AvatarImage src={session.user.image} alt={session.user.name} />
                                                     <AvatarFallback className="bg-slate-950 text-white dark:bg-white dark:text-slate-950 text-[10px] font-bold uppercase">
-                                                        {user.name ? user.name.substring(0, 2) : "US"}
+                                                        {session.user.name ? session.user.name.substring(0, 2) : "US"}
                                                     </AvatarFallback>
                                                 </Avatar>
-                                                <span className="text-xs font-medium text-slate-800 dark:text-slate-200 capitalize">{user.name}</span>
+                                                <span className="text-xs font-medium text-slate-800 dark:text-slate-200 capitalize">{session.user.name}</span>
                                                 <span className="text-[9px] text-slate-400 transition-transform group-data-[state=open]:rotate-180">▼</span>
                                             </Button>
                                         </DropdownMenuTrigger>
 
-                                        <DropdownMenuContent align="end" className="w-52 mt-2 p-1.5 rounded-2xl border border-slate-200/80 bg-white dark:border-slate-800 dark:bg-slate-950 shadow-xl shadow-slate-200/40 dark:shadow-none animate-in fade-in slide-in-from-top-2 duration-200">
-                                            <div className="px-3 py-2 text-[11px] text-slate-400 font-normal">
-                                                Signed in as <br />
-                                                <strong className="text-slate-800 dark:text-slate-200 block truncate font-medium text-xs mt-0.5">{user.email}</strong>
+                                        <DropdownMenuContent align="end" className="w-56 mt-2 p-1.5 rounded-2xl border border-slate-200/80 bg-white dark:border-slate-800 dark:bg-slate-950 shadow-xl shadow-slate-200/40 dark:shadow-none animate-in fade-in slide-in-from-top-2 duration-200">
+                                            {/* User Info Section */}
+                                            <div className="px-3 py-2.5 border-b border-slate-100 dark:border-slate-800 mb-1.5">
+                                                <p className="text-[10px] text-violet-600 dark:text-violet-400 font-bold uppercase tracking-wider">
+                                                    {session.user.role} Account
+                                                </p>
+                                                <p className="font-bold text-slate-900 dark:text-white text-sm mt-0.5">{session.user.name}</p>
+                                                <p className="text-[11px] text-slate-400 truncate mt-0.5">{session.user.email}</p>
                                             </div>
-                                            <DropdownMenuSeparator className="bg-slate-100 dark:bg-slate-800" />
 
                                             <DropdownMenuItem asChild className="rounded-xl focus:bg-slate-100 dark:focus:bg-slate-900 focus:text-slate-900 dark:focus:text-slate-100 cursor-pointer">
-                                                <Link href="/dashboard" className="flex items-center gap-2.5 w-full px-2.5 py-2 text-xs font-medium text-slate-700 dark:text-slate-300">
+                                                <Link href={`/dashboard/${session.user.role}`} className="flex items-center gap-2.5 w-full px-2.5 py-2 text-xs font-medium text-slate-700 dark:text-slate-300">
                                                     <LayoutDashboard className="h-3.5 w-3.5 text-slate-400" />
-                                                    Dashboard
+                                                    My Dashboard
                                                 </Link>
                                             </DropdownMenuItem>
 
                                             <DropdownMenuItem asChild className="rounded-xl focus:bg-slate-100 dark:focus:bg-slate-900 focus:text-slate-900 dark:focus:text-slate-100 cursor-pointer">
                                                 <Link href="/profile" className="flex items-center gap-2.5 w-full px-2.5 py-2 text-xs font-medium text-slate-700 dark:text-slate-300">
                                                     <User className="h-3.5 w-3.5 text-slate-400" />
-                                                    Profile
+                                                    Profile Settings
                                                 </Link>
                                             </DropdownMenuItem>
 
                                             <DropdownMenuSeparator className="bg-slate-100 dark:bg-slate-800" />
 
-                                            <DropdownMenuItem className="rounded-xl focus:bg-red-50 focus:text-red-600 dark:focus:bg-red-950/20 dark:focus:text-red-400 cursor-pointer text-red-600 dark:text-red-400">
+                                            <DropdownMenuItem 
+                                                onClick={handleLogout}
+                                                className="rounded-xl focus:bg-red-50 focus:text-red-600 dark:focus:bg-red-950/20 dark:focus:text-red-400 cursor-pointer text-red-600 dark:text-red-400"
+                                            >
                                                 <div className="flex items-center gap-2.5 w-full px-2.5 py-2 text-xs font-medium">
                                                     <LogOut className="h-3.5 w-3.5" />
-                                                    Logout
+                                                    Log Out
                                                 </div>
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 ) : (
-                                    /* Premium Pill Shaped CTA Button Actions matching Image Reference styling */
+                                    /* Premium Pill Shaped CTA Button Actions */
                                     <div className="flex items-center gap-2">
                                         <Button variant="ghost" asChild className="rounded-full text-xs font-medium px-4 h-8 text-slate-600 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white">
                                             <Link href="/login">Login</Link>
@@ -205,13 +227,26 @@ export default function Navbar() {
                             {link.name}
                         </Link>
                     ))}
+                    {session?.user && (
+                        <Link
+                            href={`/dashboard/${session.user.role}`}
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="block px-3 py-2 rounded-xl text-xs font-medium text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-900"
+                        >
+                            Dashboard
+                        </Link>
+                    )}
                     <div className="pt-3 border-t border-slate-100 dark:border-slate-800 mt-2">
-                        {user ? (
+                        {session?.user ? (
                             <div className="space-y-0.5">
-                                <div className="px-3 py-1.5 text-[10px] text-slate-400">Signed in as {user.email}</div>
-                                <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 rounded-xl text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-900">Dashboard</Link>
-                                <Link href="/profile" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 rounded-xl text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-900">Profile</Link>
-                                <button className="w-full text-left block px-3 py-2 rounded-xl text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20">Logout</button>
+                                <div className="px-3 py-1.5 text-[10px] text-slate-400">
+                                    <span className="text-violet-600 dark:text-violet-400 font-bold uppercase">{session.user.role}</span>
+                                    <br />
+                                    Signed in as {session.user.email}
+                                </div>
+                                <Link href={`/dashboard/${session.user.role}`} onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 rounded-xl text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-900">Dashboard</Link>
+                                <Link href="/profile" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-2 rounded-xl text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-900">Profile Settings</Link>
+                                <button onClick={handleLogout} className="w-full text-left block px-3 py-2 rounded-xl text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20">Logout</button>
                             </div>
                         ) : (
                             <div className="grid grid-cols-2 gap-2 p-1">

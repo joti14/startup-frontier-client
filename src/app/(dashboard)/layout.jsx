@@ -7,7 +7,7 @@ const DashboardLayout = ({ children }) => {
             <aside className='w-64 h-screen border-r'>
                 <DashboardSideBar />
             </aside>
-            <div>
+            <div className='px-6 py-10 max-w-5xl'>
                 {children}
             </div>
         </div>

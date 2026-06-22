@@ -24,6 +24,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { authClient, useSession } from "@/lib/auth-client";
+import { Logo } from "@/components/Logo";
 
 export default function Navbar() {
     const pathname = usePathname();
@@ -55,14 +56,7 @@ export default function Navbar() {
 
                     {/* Left Side: Brand Logo */}
                     <div className="flex items-center">
-                        <Link href="/" className="flex items-center gap-2.5 font-bold text-lg tracking-tight text-slate-950 dark:text-white group">
-                            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-950 text-white dark:bg-white dark:text-slate-950 transition-transform group-hover:scale-105">
-                                <Rocket className="h-4.5 w-4.5" />
-                            </span>
-                            <span className="font-semibold tracking-tight">
-                                startup<span className="text-violet-600 dark:text-violet-400">Frontier</span>
-                            </span>
-                        </Link>
+                        <Logo />
                     </div>
 
                     {/* Center Side: Clean Text Navigation Links */}

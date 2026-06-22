@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import { Envelope, Globe, LogoGithub, LogoLinkedin, MapPin, Rocket } from '@gravity-ui/icons';
 import { FaXTwitter } from "react-icons/fa6";
+import { Logo } from "@/components/Logo";
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
@@ -16,14 +17,7 @@ export default function Footer() {
 
                     {/* Column 1: Brand & Description [Logo Requirement] */}
                     <div className="space-y-4 md:col-span-1">
-                        <Link href="/" className="flex items-center gap-2.5 font-bold text-lg tracking-tight text-slate-950 dark:text-white group">
-                            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-950 text-white dark:bg-white dark:text-slate-950 transition-transform group-hover:scale-105">
-                                <Rocket className="h-4.5 w-4.5" />
-                            </span>
-                            <span className="font-semibold tracking-tight">
-                                Startup<span className="text-violet-600 dark:text-violet-400">Frontier</span>
-                            </span>
-                        </Link>
+                        <Logo />
                         <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-xs">
                             Bridging the gap between visionary startup founders and exceptionally talented collaborators to build the next generation of industry-defining teams.
                         </p>

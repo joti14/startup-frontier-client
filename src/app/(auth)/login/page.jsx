@@ -10,6 +10,7 @@ import { FcGoogle } from "react-icons/fc";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Logo } from "@/components/Logo";
 import toast from "react-hot-toast";
 
 export default function LoginPage() {
@@ -87,15 +88,8 @@ export default function LoginPage() {
           
           {/* Logo Branding */}
           <div className="flex flex-col items-center justify-center gap-2 mb-4">
-            <div className="w-10 h-10 bg-[#635BFF] rounded-xl flex items-center justify-center text-white font-bold shadow-sm shadow-[#635BFF]/20">
-              <Sparkles className="w-5 h-5 text-white" />
-            </div>
-            <span className="font-extrabold text-sm text-slate-900 dark:text-white tracking-tight">StartupFrontier</span>
+            <Logo link={false} />
           </div>
-
-          <h1 className="text-2xl font-bold text-center text-slate-900 dark:text-white tracking-tight">Welcome back</h1>
-          <p className="text-xs text-center text-slate-400 mt-1 mb-6">Sign in to continue building your startup</p>
-
           {/* Social Authentication */}
           <Button
             type="button"

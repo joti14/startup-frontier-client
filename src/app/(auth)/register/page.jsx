@@ -10,6 +10,7 @@ import { FcGoogle } from "react-icons/fc";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Logo } from "@/components/Logo";
 import toast from "react-hot-toast";
 import { uploadToImgbb } from "@/utils/uploadImage";
 
@@ -71,12 +72,12 @@ export default function RegisterPage() {
     photo.state === "uploading"
       ? "Uploading..."
       : photo.state === "done"
-      ? photo.file?.name?.length > 22
-        ? photo.file.name.slice(0, 22) + "..."
-        : photo.file?.name
-      : photo.state === "error"
-      ? "Upload failed - try again"
-      : "Choose photo or drag & drop";
+        ? photo.file?.name?.length > 22
+          ? photo.file.name.slice(0, 22) + "..."
+          : photo.file?.name
+        : photo.state === "error"
+          ? "Upload failed - try again"
+          : "Choose photo or drag & drop";
 
   // ─── HANDLERS ────────────────────────────────────────────────────────────
   const handlePhotoChange = async (e) => {
@@ -87,7 +88,7 @@ export default function RegisterPage() {
       setSubmitError("Photo must be under 2 MB.");
       return;
     }
-    
+
     if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
       setSubmitError("Only JPG, PNG, or WEBP allowed.");
       return;
@@ -98,7 +99,7 @@ export default function RegisterPage() {
 
     try {
       console.log("Starting upload to ImgBB...");
-      const url = await uploadToImgbb(file);  
+      const url = await uploadToImgbb(file);
       console.log("Upload successful, URL:", url);
       setPhoto((prev) => ({ ...prev, url, state: "done" }));
       toast.success("Photo uploaded successfully");
@@ -113,12 +114,12 @@ export default function RegisterPage() {
   const onSubmit = async (data) => {
     console.log('Form data:', data);
     console.log('Photo state:', photo);
-    
+
     if (!isFormReady) {
       console.log('Form not ready');
       return;
     }
-    
+
     if (photo.state === "uploading") {
       setSubmitError("Please wait for photo upload to complete.");
       return;
@@ -135,7 +136,7 @@ export default function RegisterPage() {
 
     const fullName = `${data.firstName} ${data.lastName}`.trim();
     const imageUrl = photo.url || "";
-    
+
     console.log('Submitting with image URL:', imageUrl);
 
     const { error: authError } = await authClient.signUp.email({
@@ -183,13 +184,10 @@ export default function RegisterPage() {
       <div className="w-full max-w-[480px] relative z-10 group">
         {/* Card Wrapper */}
         <div className="bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-900 rounded-3xl p-8 shadow-sm transition-all duration-300 group-hover:shadow-md group-hover:border-slate-200/60 dark:group-hover:border-slate-800/60">
-          
+
           {/* Logo Branding */}
           <div className="flex flex-col items-center justify-center gap-2 mb-4">
-            <div className="w-10 h-10 bg-[#635BFF] rounded-xl flex items-center justify-center text-white font-bold shadow-sm shadow-[#635BFF]/20">
-              <Sparkles className="w-5 h-5 text-white" />
-            </div>
-            <span className="font-extrabold text-sm text-slate-900 dark:text-white tracking-tight">StartupFrontier</span>
+            <Logo link={false} />
           </div>
 
           <h1 className="text-2xl font-bold text-center text-slate-900 dark:text-white tracking-tight">Create your account</h1>
@@ -215,7 +213,7 @@ export default function RegisterPage() {
 
           {/* Form */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            
+
             {/* Role Selection */}
             <div className="space-y-1.5">
               <Label className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide">I WANT TO</Label>
@@ -229,7 +227,7 @@ export default function RegisterPage() {
                   <div className={`text-xs font-bold ${role === 'founder' ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-slate-300'}`}>Post a startup</div>
                   <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Recruit collaborators</div>
                 </button>
-                
+
                 <button
                   type="button"
                   onClick={() => setValue("role", "collaborator")}
@@ -274,7 +272,7 @@ export default function RegisterPage() {
                   id="email"
                   type="email"
                   placeholder="you@example.com"
-                  {...register("email", { 
+                  {...register("email", {
                     required: "Email is required",
                     pattern: { value: /^\S+@\S+$/i, message: "Invalid email address" }
                   })}
@@ -290,11 +288,10 @@ export default function RegisterPage() {
               <Label className="text-xs font-semibold text-slate-700 dark:text-slate-400">Profile Photo <span className="text-slate-400 font-normal">(via imgbb)</span></Label>
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className={`flex items-center gap-3 px-4 py-3 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-200 ${
-                  photo.state === "error" 
-                    ? "border-rose-300 dark:border-rose-900 bg-rose-50/50 dark:bg-rose-950/20" 
+                className={`flex items-center gap-3 px-4 py-3 border-2 border-dashed rounded-xl cursor-pointer transition-all duration-200 ${photo.state === "error"
+                    ? "border-rose-300 dark:border-rose-900 bg-rose-50/50 dark:bg-rose-950/20"
                     : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50"
-                }`}
+                  }`}
               >
                 <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center flex-shrink-0 overflow-hidden">
                   {photo.preview ? (
@@ -304,11 +301,10 @@ export default function RegisterPage() {
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className={`text-xs font-semibold ${
-                    photo.state === "error" 
-                      ? "text-rose-600 dark:text-rose-400" 
+                  <div className={`text-xs font-semibold ${photo.state === "error"
+                      ? "text-rose-600 dark:text-rose-400"
                       : "text-[#635BFF] dark:text-[#818CF8]"
-                  }`}>
+                    }`}>
                     {uploadLabel}
                   </div>
                   <div className="text-[10px] text-slate-400">PNG, JPG, WEBP - max 2 MB</div>
@@ -334,7 +330,7 @@ export default function RegisterPage() {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Min 6 characters"
-                  {...register("password", { 
+                  {...register("password", {
                     required: "Password is required",
                     minLength: { value: 6, message: "Password must be at least 6 characters" }
                   })}

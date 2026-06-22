@@ -18,7 +18,8 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "StartupFrontier — Startup Team Builder Platform",
-  description: "Publish startup ideas, build exceptional teams, and recruit talented collaborators.",
+  description:
+    "Publish startup ideas, build exceptional teams, and recruit talented collaborators.",
 };
 
 export default function RootLayout({ children }) {
@@ -29,19 +30,15 @@ export default function RootLayout({ children }) {
       className={`${plusJakartaSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full font-sans bg-slate-50/60 text-slate-900 dark:bg-slate-950 dark:text-slate-50 transition-colors duration-200 relative flex flex-col">
-        
         <div className="absolute inset-x-0 top-0 -z-10 h-200 w-full bg-bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-blue-100/40 via-slate-100/20 to-transparent blur-3xl dark:from-blue-950/20 dark:via-transparent pointer-events-none" />
 
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-          <header className="sticky top-0 z-50 w-full backdrop-blur-md">
-            <Navbar />
-          </header>
-
-          <main className="flex-1 w-full relative z-10">
-            {children}
-          </main>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+        >
+          <main className="flex-1 w-full relative z-10">{children}</main>
           <Toaster />
-          <Footer />
         </ThemeProvider>
       </body>
     </html>

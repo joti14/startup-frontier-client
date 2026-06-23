@@ -35,7 +35,7 @@ export default function DashboardSideBar({ onPremiumTrigger }) {
     { key: "overview", label: "Overview", icon: LayoutDashboard, href: "/dashboard/founder" },
     { key: "startup", label: "My Startup", icon: Rocket, href: "/dashboard/founder/startup" },
     { key: "add-opportunity", label: "Add Opportunity", icon: PlusCircle, href: "/dashboard/founder/add-opportunity" },
-    { key: "opportunities", label: "Manage Roles", icon: Briefcase, href: "/dashboard/founder/opportunities" },
+    { key: "opportunities", label: "Manage Opportunities", icon: Briefcase, href: "/dashboard/founder/opportunities" },
     { key: "applications", label: "Applications", icon: Users2, href: "/dashboard/founder/applications" },
   ];
 

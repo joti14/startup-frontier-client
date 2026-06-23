@@ -3,13 +3,14 @@ import React from 'react';
 
 const DashboardLayout = ({ children }) => {
     return (
-        <div className='min-h-screen flex'>
-            <aside className='w-64 h-screen border-r'>
-                <DashboardSideBar />
-            </aside>
-            <div className='px-6 py-10 max-w-5xl'>
-                {children}
-            </div>
+        <div className='h-screen flex overflow-hidden bg-slate-50 dark:bg-[#090d16]'>
+            <DashboardSideBar />
+            
+            <main className='flex-1 overflow-y-auto'>
+                <div className='px-6 py-6 max-w-6xl mx-auto'>
+                    {children}
+                </div>
+            </main>
         </div>
     );
 };

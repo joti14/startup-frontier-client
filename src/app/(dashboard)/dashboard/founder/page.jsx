@@ -1,3 +1,4 @@
+import DashboardHeading from "@/components/dashboard/DashboardHeading";
 import { Briefcase, Users2, UserCheck, Crown } from "lucide-react";
 
 export default async function FounderOverviewPage() {
@@ -12,14 +13,7 @@ export default async function FounderOverviewPage() {
   return (
     <div className="space-y-6 mt-6 px-6">
       
-      <div className="flex flex-col gap-1 text-left pb-2">
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
-          Overview
-        </h1>
-        <p className="text-xs text-slate-400 dark:text-slate-500">
-          Monitor your active roles, track incoming applications, and scale your team.
-        </p>
-      </div>
+      <DashboardHeading title={"Overview"} description={"Monitor your active roles, track incoming applications, and scale your team."} />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         

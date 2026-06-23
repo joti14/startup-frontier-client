@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
+import { useSession } from "@/lib/auth-client";
+import { createStartup } from "@/lib/api/startups/actions";
 import { 
   Rocket, 
   Building2, 
@@ -21,6 +23,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import toast from "react-hot-toast";
+import { myStartup } from "@/lib/api/startups/data";
 
 async function uploadToImgbb(file) {
   const formData = new FormData();
@@ -37,10 +41,22 @@ async function uploadToImgbb(file) {
 
 export default function MyStartup() {
   const fileInputRef = useRef(null);
+  const { data: session } = useSession();
+  const [startup, setStartup] = useState(null);
   const [logoState, setLogoState] = useState({ file: null, preview: null, url: null, state: "idle" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [globalError, setGlobalError] = useState("");
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    const setStartupData = async () => {
+      if (!session?.user?.email) return;
+      const st = await myStartup(session.user.email);
+      setStartup(st);
+    }
+    setStartupData();
+  }, [session]);
+//   console.log(startup)
 
   const { 
     register, 
@@ -87,9 +103,23 @@ export default function MyStartup() {
     setGlobalError("");
     setSuccess(false);
 
+    const startupData = {
+      startupName: data.startupName,
+      logoUrl: data.logoUrl,
+      industry: data.industry,
+      description: data.description,
+      fundingStage: data.fundingStage,
+      founderEmail: session?.user?.email || data.founderEmail,
+    };
+
     try {
-      console.log("Submitting Startup Structured Profile Data:", data);
-      setSuccess(true);
+        if(startup) {
+            const resData = await createStartup(startupData);
+            if (resData?.insertedId) {
+              toast.success("Startup Added");
+              setSuccess(true);
+            }
+        }
     } catch (err) {
       setGlobalError("Could not save profile setup. Verify network state.");
     } finally {
@@ -123,6 +153,7 @@ export default function MyStartup() {
               <label className="text-xs font-semibold text-slate-700 dark:text-slate-400">Startup Name</label>
               <div className="relative">
                 <input 
+                defaultValue={startup?.startupName}
                   type="text" 
                   placeholder="e.g. Stripe, Acme Corp" 
                   {...register("startupName", { required: "Startup name is required" })}
@@ -165,6 +196,7 @@ export default function MyStartup() {
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-semibold text-slate-700 dark:text-slate-400">Industry</label>
               <Controller
+              defaultValue={startup?.industry}
                 name="industry"
                 control={control}
                 rules={{ required: "Industry type is required" }}
@@ -203,6 +235,7 @@ export default function MyStartup() {
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-semibold text-slate-700 dark:text-slate-400">Funding Stage</label>
               <Controller
+              defaultValue={startup?.fundingStage}
                 name="fundingStage"
                 control={control}
                 render={({ field }) => (

@@ -1,28 +1,42 @@
 import { Suspense } from "react";
 import { fetchAllStartups } from "@/lib/api/startups/data";
 import StartupCard from "@/components/StartupCard";
-import { Sparkles, Rocket } from "lucide-react";
+import StartupFilters from "@/components/StartupFilters";
+import { Rocket, Sparkles } from "lucide-react";
 
-async function StartupGrid() {
-    const startups = await fetchAllStartups();
+async function StartupGrid({ search, industry, fundingStage }) {
+    const params = {};
+    if (search) params.search = search;
+    if (industry) params.industry = industry;
+    if (fundingStage) params.fundingStage = fundingStage;
+
+    const startups = await fetchAllStartups(params);
 
     if (!startups || startups.length === 0) {
         return (
             <div className="text-center py-20 space-y-3">
                 <Rocket className="h-8 w-8 text-slate-300 dark:text-slate-700 mx-auto" />
-                <p className="text-sm text-slate-400 dark:text-slate-500">
-                    No startups found yet. Check back soon!
+                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                    No startups match your search.
+                </p>
+                <p className="text-xs text-slate-400 dark:text-slate-500">
+                    Try adjusting your filters or search term.
                 </p>
             </div>
         );
     }
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {startups.map((startup) => (
-                <StartupCard key={startup._id} startup={startup} />
-            ))}
-        </div>
+        <>
+            <p className="text-xs text-slate-400 dark:text-slate-500 font-medium">
+                {startups.length} startup{startups.length !== 1 ? "s" : ""} found
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                {startups.map((startup) => (
+                    <StartupCard key={startup._id} startup={startup} />
+                ))}
+            </div>
+        </>
     );
 }
 
@@ -55,7 +69,12 @@ function StartupGridSkeleton() {
     );
 }
 
-export default function BrowseStartups() {
+export default async function BrowseStartups({ searchParams }) {
+    const sParams = await searchParams;
+    const search = sParams?.search || "";
+    const industry = sParams?.industry || "";
+    const fundingStage = sParams?.fundingStage || "";
+
     return (
         <div className="relative min-h-screen overflow-hidden">
 
@@ -65,10 +84,10 @@ export default function BrowseStartups() {
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] [background-size:4.5rem_4.5rem] [mask-image:radial-gradient(ellipse_65%_60%_at_50%_30%,#000_60%,transparent_100%)] opacity-40" />
             </div>
 
-            <div className="relative max-w-6xl mx-auto px-6 py-16 space-y-12">
+            <div className="relative max-w-6xl mx-auto px-6 py-16 space-y-10">
 
-                {/* Page header */}
-                <div className="space-y-4">
+                {/* Page header — centered */}
+                <div className="text-center space-y-4">
                     <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900 text-[11px] font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide shadow-sm">
                         <Sparkles className="h-3 w-3 text-[#635BFF] animate-pulse" />
                         All Startups
@@ -79,14 +98,23 @@ export default function BrowseStartups() {
                             Big Venture
                         </span>
                     </h1>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xl leading-relaxed">
+                    <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">
                         Browse every startup on the platform. Connect with founders, explore open roles, and join a team building something great.
                     </p>
                 </div>
 
-                {/* Startup grid with suspense */}
+                {/* Filters — client component */}
+                <Suspense fallback={null}>
+                    <StartupFilters />
+                </Suspense>
+
+                {/* Startup grid — re-fetches on searchParam change */}
                 <Suspense fallback={<StartupGridSkeleton />}>
-                    <StartupGrid />
+                    <StartupGrid
+                        search={search}
+                        industry={industry}
+                        fundingStage={fundingStage}
+                    />
                 </Suspense>
 
             </div>

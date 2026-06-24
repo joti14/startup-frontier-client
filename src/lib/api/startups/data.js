@@ -10,7 +10,8 @@ export const fetchLatestStartups = async () => {
   return result;
 };
 
-export const fetchAllStartups = async () => {
-  const result = await serverFetch(`/api/startups?featured=true`);
+export const fetchAllStartups = async (params = {}) => {
+  const qs = new URLSearchParams({ featured: "true", ...params }).toString();
+  const result = await serverFetch(`/api/startups?${qs}`);
   return result;
 };

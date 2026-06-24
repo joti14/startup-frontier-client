@@ -1,3 +1,5 @@
+'use server';
+
 import { serverMutation } from "../server";
 
 export const createStartup = async (data) => {

@@ -4,6 +4,7 @@ import Statistics from "@/components/Statistics";
 import Testimonials from "@/components/Testimonials";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import FeaturedStartups from "@/components/FeaturedStartups";
+import FeaturedOpportunities from "@/components/FeaturedOpportunities";
 
 function StartupsSkeleton() {
   return (
@@ -53,6 +54,9 @@ export default function Home() {
       <Statistics stats={mockStatsData} />
       <Suspense fallback={<StartupsSkeleton />}>
         <FeaturedStartups />
+      </Suspense>
+      <Suspense fallback={<StartupsSkeleton />}>
+        <FeaturedOpportunities />
       </Suspense>
       <WhyChooseUs />
       <Testimonials />

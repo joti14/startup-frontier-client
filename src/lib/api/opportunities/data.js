@@ -1,0 +1,24 @@
+import { baseURL } from "../baseUrl";
+
+export const myOpportunities = async (email) => {
+    const res = await fetch(`${baseURL}/api/opportunities/${email}`);
+    if (!res.ok) return [];
+    return res.json();
+};
+
+export const fetchLatestOpportunities = async () => {
+    const res = await fetch(`${baseURL}/api/opportunities?limit=6`, {
+        cache: 'no-store'
+    });
+    if (!res.ok) return [];
+    return res.json();
+};
+
+export const fetchAllOpportunities = async (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    const res = await fetch(`${baseURL}/api/opportunities?${qs}`, {
+        cache: 'no-store'
+    });
+    if (!res.ok) return [];
+    return res.json();
+};

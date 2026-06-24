@@ -1,4 +1,5 @@
 import { Building2, Users, Layers, Rocket } from "lucide-react";
+import Link from "next/link";
 
 const INDUSTRY_COLORS = {
     "SaaS": "bg-blue-50 text-blue-600 border-blue-100 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-900/40",
@@ -25,55 +26,57 @@ export default function StartupCard({ startup }) {
         "bg-slate-50 text-slate-600 border-slate-100 dark:bg-slate-900 dark:text-slate-400 dark:border-slate-800";
 
     return (
-        <div className="group bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-900 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-slate-200/80 dark:hover:border-slate-800/80 transition-all duration-300 flex flex-col gap-4">
+        <Link href={`/startups/${startup._id}`} className="block group">
+            <div className="h-full bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-900 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-slate-200/80 dark:hover:border-slate-800/80 transition-all duration-300 flex flex-col gap-4 cursor-pointer">
 
-            {/* Header: Logo + Name + Industry badge */}
-            <div className="flex items-start justify-between gap-3">
-                <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-11 h-11 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
-                        {startup.logoUrl ? (
-                            <img
-                                src={startup.logoUrl}
-                                alt={startup.startupName}
-                                className="w-full h-full object-cover"
-                            />
-                        ) : (
-                            <Rocket className="h-5 w-5 text-[#635BFF]" />
-                        )}
+                {/* Header: Logo + Name + Industry badge */}
+                <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-11 h-11 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
+                            {startup.logoUrl ? (
+                                <img
+                                    src={startup.logoUrl}
+                                    alt={startup.startupName}
+                                    className="w-full h-full object-cover"
+                                />
+                            ) : (
+                                <Rocket className="h-5 w-5 text-[#635BFF]" />
+                            )}
+                        </div>
+                        <div className="min-w-0">
+                            <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate group-hover:text-[#635BFF] transition-colors duration-200">
+                                {startup.startupName}
+                            </h3>
+                            <p className="text-[11px] text-slate-400 dark:text-slate-500 truncate mt-0.5">
+                                {startup.founderEmail}
+                            </p>
+                        </div>
                     </div>
-                    <div className="min-w-0">
-                        <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 truncate group-hover:text-[#635BFF] transition-colors duration-200">
-                            {startup.startupName}
-                        </h3>
-                        <p className="text-[11px] text-slate-400 dark:text-slate-500 truncate mt-0.5">
-                            {startup.founderEmail}
-                        </p>
-                    </div>
+                    <span className={`shrink-0 inline-flex items-center px-2 py-0.5 rounded-lg border text-[10px] font-bold uppercase tracking-wide ${industryColor}`}>
+                        {startup.industry}
+                    </span>
                 </div>
-                <span className={`shrink-0 inline-flex items-center px-2 py-0.5 rounded-lg border text-[10px] font-bold uppercase tracking-wide ${industryColor}`}>
-                    {startup.industry}
-                </span>
+
+                {/* Description */}
+                <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed flex-1">
+                    {startup.description || "No description provided."}
+                </p>
+
+                {/* Footer: Stage + Team size */}
+                <div className="flex items-center justify-between pt-1 border-t border-slate-50 dark:border-slate-900">
+                    <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                        <Layers className="h-3.5 w-3.5 text-violet-500" />
+                        {STAGE_LABELS[startup.fundingStage] || startup.fundingStage || "—"}
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                        <Users className="h-3.5 w-3.5 text-emerald-500" />
+                        {startup.teamSizeNeeded
+                            ? `${startup.teamSizeNeeded} member${startup.teamSizeNeeded > 1 ? "s" : ""} needed`
+                            : "Team TBD"}
+                    </span>
+                </div>
+
             </div>
-
-            {/* Description */}
-            <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed flex-1">
-                {startup.description || "No description provided."}
-            </p>
-
-            {/* Footer: Stage + Team size */}
-            <div className="flex items-center justify-between pt-1 border-t border-slate-50 dark:border-slate-900">
-                <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
-                    <Layers className="h-3.5 w-3.5 text-violet-500" />
-                    {STAGE_LABELS[startup.fundingStage] || startup.fundingStage || "—"}
-                </span>
-                <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
-                    <Users className="h-3.5 w-3.5 text-emerald-500" />
-                    {startup.teamSizeNeeded
-                        ? `${startup.teamSizeNeeded} member${startup.teamSizeNeeded > 1 ? "s" : ""} needed`
-                        : "Team TBD"}
-                </span>
-            </div>
-
-        </div>
+        </Link>
     );
 }

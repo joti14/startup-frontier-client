@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSession } from "@/lib/auth-client";
 import DashboardHeading from "@/components/dashboard/DashboardHeading";
-import { Loader2, CheckCircle, XCircle, FileText, Link as LinkIcon, User, RefreshCw } from "lucide-react";
+import { Loader2, FileText, Link as LinkIcon, RefreshCw, Building } from "lucide-react";
 import toast from "react-hot-toast";
 import {
   Table,
@@ -13,25 +13,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { baseURL } from "@/lib/api/baseUrl";
+import { fetchApplicantApplications } from "@/lib/api/applications/data";
 
-export default function ApplicationsPage() {
+export default function MyApplicationsPage() {
     const { data: session } = useSession();
     const [applications, setApplications] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [actionLoading, setActionLoading] = useState(null);
 
     const fetchApps = useCallback(async (email) => {
         setIsLoading(true);
         try {
-            console.log("[Applications] Fetching for founder email:", email);
-            const res = await fetch(`${baseURL}/api/applications/founder/${email}`);
-            console.log("[Applications] Response status:", res.status);
-            const data = await res.json();
-            console.log("[Applications] Data received:", data);
+            const data = await fetchApplicantApplications(email);
             setApplications(Array.isArray(data) ? data : []);
         } catch (err) {
-            console.error("[Applications] Fetch error:", err);
+            console.error("Fetch error:", err);
             toast.error("Failed to load applications.");
         } finally {
             setIsLoading(false);
@@ -44,37 +39,12 @@ export default function ApplicationsPage() {
         fetchApps(email);
     }, [session?.user?.email, fetchApps]);
 
-    const handleUpdateStatus = async (appId, newStatus) => {
-        setActionLoading(appId);
-        try {
-            const res = await fetch(`${baseURL}/api/applications/${appId}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ status: newStatus }),
-            });
-            const result = await res.json();
-            if (result?.modifiedCount > 0) {
-                setApplications((prev) =>
-                    prev.map((app) => (app._id === appId ? { ...app, status: newStatus } : app))
-                );
-                toast.success(`Application ${newStatus}!`);
-            } else {
-                toast.error("Failed to update status.");
-            }
-        } catch (err) {
-            console.error(err);
-            toast.error("An error occurred.");
-        } finally {
-            setActionLoading(null);
-        }
-    };
-
     const email = session?.user?.email;
 
     return (
         <div className="max-w-6xl px-6 py-4">
-            <div className="flex items-center justify-between mb-2">
-                <DashboardHeading title="Applications" description="Review and manage applications for your open roles." />
+            <div className="flex items-center justify-between mb-6">
+                <DashboardHeading title="My Applications" description="Track the status of roles you have applied for." />
                 {email && (
                     <button
                         onClick={() => fetchApps(email)}
@@ -86,55 +56,45 @@ export default function ApplicationsPage() {
                 )}
             </div>
 
-            {/* Debug info in development */}
-            {process.env.NODE_ENV === "development" && (
-                <p className="text-[10px] text-slate-400 mb-3">
-                    Fetching as: <span className="font-mono text-slate-600 dark:text-slate-300">{email || "not logged in"}</span>
-                    {" · "}{applications.length} application(s) found
-                </p>
-            )}
-
             {isLoading ? (
                 <div className="flex justify-center py-10">
                     <Loader2 className="w-6 h-6 animate-spin text-slate-400" />
                 </div>
             ) : !email ? (
                 <div className="bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-900 rounded-2xl p-10 text-center shadow-sm">
-                    <p className="text-slate-600 dark:text-slate-400 text-sm font-medium">Please log in to view applications.</p>
+                    <p className="text-slate-600 dark:text-slate-400 text-sm font-medium">Please log in to view your applications.</p>
                 </div>
             ) : applications.length === 0 ? (
                 <div className="bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-900 rounded-2xl p-10 text-center shadow-sm space-y-2">
-                    <p className="text-slate-600 dark:text-slate-400 text-sm font-medium">No applications received yet.</p>
-                    <p className="text-xs text-slate-400">Applications submitted to your startup&apos;s open positions will appear here.</p>
+                    <p className="text-slate-600 dark:text-slate-400 text-sm font-medium">You haven't applied to any roles yet.</p>
+                    <p className="text-xs text-slate-400">Start exploring opportunities and apply to join amazing startups!</p>
                 </div>
             ) : (
                 <div className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
                     <Table>
                         <TableHeader className="bg-slate-50 dark:bg-slate-900/50">
                             <TableRow>
-                                <TableHead className="w-[200px] text-xs font-bold uppercase text-slate-500">Applicant</TableHead>
-                                <TableHead className="text-xs font-bold uppercase text-slate-500">Role</TableHead>
-                                <TableHead className="text-xs font-bold uppercase text-slate-500">Documents</TableHead>
+                                <TableHead className="w-[200px] text-xs font-bold uppercase text-slate-500">Role</TableHead>
+                                <TableHead className="text-xs font-bold uppercase text-slate-500">Startup</TableHead>
+                                <TableHead className="text-xs font-bold uppercase text-slate-500">My Submission</TableHead>
                                 <TableHead className="text-xs font-bold uppercase text-slate-500">Status</TableHead>
-                                <TableHead className="text-right text-xs font-bold uppercase text-slate-500">Actions</TableHead>
+                                <TableHead className="text-right text-xs font-bold uppercase text-slate-500">Date Applied</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {applications.map((app) => (
                                 <TableRow key={app._id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/20">
                                     <TableCell className="align-top py-4">
-                                        <div className="space-y-1">
-                                            <p className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                                                <User className="w-4 h-4 text-slate-400" />
-                                                {app.applicantName || "Unknown Applicant"}
-                                            </p>
-                                            <p className="text-xs text-slate-500 dark:text-slate-400">{app.applicantEmail}</p>
-                                        </div>
+                                        <p className="text-sm font-semibold text-[#635BFF]">{app.opportunityTitle}</p>
                                     </TableCell>
 
                                     <TableCell className="align-top py-4">
-                                        <p className="text-sm font-semibold text-[#635BFF]">{app.opportunityTitle}</p>
-                                        <p className="text-xs text-slate-400 mt-0.5">{app.startupName}</p>
+                                        <div className="space-y-1">
+                                            <p className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                                                <Building className="w-4 h-4 text-slate-400" />
+                                                {app.startupName}
+                                            </p>
+                                        </div>
                                     </TableCell>
 
                                     <TableCell className="align-top py-4 max-w-xs">
@@ -167,28 +127,9 @@ export default function ApplicationsPage() {
                                     </TableCell>
 
                                     <TableCell className="align-top py-4 text-right">
-                                        {app.status === 'pending' ? (
-                                            <div className="flex flex-col sm:flex-row items-end sm:justify-end gap-2">
-                                                <button
-                                                    onClick={() => handleUpdateStatus(app._id, "accepted")}
-                                                    disabled={actionLoading === app._id}
-                                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 dark:bg-emerald-900/20 dark:hover:bg-emerald-900/40 dark:text-emerald-400 rounded-lg text-xs font-semibold transition-colors disabled:opacity-50"
-                                                >
-                                                    {actionLoading === app._id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle className="w-3.5 h-3.5" />}
-                                                    Accept
-                                                </button>
-                                                <button
-                                                    onClick={() => handleUpdateStatus(app._id, "rejected")}
-                                                    disabled={actionLoading === app._id}
-                                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 dark:bg-rose-900/20 dark:hover:bg-rose-900/40 dark:text-rose-400 rounded-lg text-xs font-semibold transition-colors disabled:opacity-50"
-                                                >
-                                                    {actionLoading === app._id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <XCircle className="w-3.5 h-3.5" />}
-                                                    Reject
-                                                </button>
-                                            </div>
-                                        ) : (
-                                            <span className="text-xs text-slate-400 italic">No actions</span>
-                                        )}
+                                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                                            {new Date(app.createdAt).toLocaleDateString()}
+                                        </p>
                                     </TableCell>
                                 </TableRow>
                             ))}

@@ -11,7 +11,6 @@ import {
     CalendarDays,
     Loader2,
     ShieldAlert,
-    Check,
     Plus,
 } from "lucide-react";
 import DashboardHeading from "@/components/dashboard/DashboardHeading";
@@ -29,7 +28,6 @@ export default function AddOpportunity() {
     const { data: session } = useSession();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [globalError, setGlobalError] = useState("");
-    const [success, setSuccess] = useState(false);
 
     const {
         register,
@@ -50,7 +48,6 @@ export default function AddOpportunity() {
     const onSubmitForm = async (data) => {
         setIsSubmitting(true);
         setGlobalError("");
-        setSuccess(false);
 
         const opportunityData = {
             ...data,
@@ -61,12 +58,12 @@ export default function AddOpportunity() {
 
         try {
             const res = await addOpportunity(opportunityData);
+            console.log('res', res)
             if (res?.insertedId) {
                 toast.success("Opportunity posted successfully!");
-                setSuccess(true);
                 reset();
             } else {
-                setGlobalError(res?.message || "Failed to post opportunity.");
+                toast.error(res?.message || "Failed to post opportunity.");
             }
         } catch {
             setGlobalError("Something went wrong. Please try again.");
@@ -146,7 +143,7 @@ export default function AddOpportunity() {
                                 control={control}
                                 rules={{ required: "Work type is required" }}
                                 render={({ field }) => (
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <Select onValueChange={field.onChange} value={field.value}>
                                         <SelectTrigger className="w-full bg-white dark:bg-slate-900 text-slate-950 dark:text-white border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3.5 py-2 text-xs font-medium outline-none transition-all duration-200 focus:border-slate-400 dark:focus:border-slate-600 h-auto">
                                             <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
                                                 <Monitor className="h-4 w-4 text-slate-400" />
@@ -177,7 +174,7 @@ export default function AddOpportunity() {
                                 control={control}
                                 rules={{ required: "Commitment level is required" }}
                                 render={({ field }) => (
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <Select onValueChange={field.onChange} value={field.value}>
                                         <SelectTrigger className="w-full bg-white dark:bg-slate-900 text-slate-950 dark:text-white border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3.5 py-2 text-xs font-medium outline-none transition-all duration-200 focus:border-slate-400 dark:focus:border-slate-600 h-auto">
                                             <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
                                                 <Clock className="h-4 w-4 text-slate-400" />
@@ -227,13 +224,6 @@ export default function AddOpportunity() {
                         <div className="flex items-center gap-2 text-xs text-rose-600 bg-rose-50 dark:bg-rose-950/20 dark:text-rose-400 border border-rose-100 dark:border-rose-900/30 rounded-xl px-3 py-2">
                             <ShieldAlert className="h-4 w-4 shrink-0" />
                             <span>{globalError}</span>
-                        </div>
-                    )}
-
-                    {success && (
-                        <div className="flex items-center gap-2 text-xs text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/30 rounded-xl px-3 py-2">
-                            <Check className="h-4 w-4 shrink-0" />
-                            <span>Opportunity posted successfully! Applicants can now find this role.</span>
                         </div>
                     )}
 

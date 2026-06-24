@@ -22,11 +22,14 @@ export const auth = betterAuth({
   user: {
     additionalFields: {
       role: {
-        defaultValue: "collaborator"
+        defaultValue: "collaborator",
       },
       isBlocked: {
-        defaultValue: false
+        defaultValue: false,
       },
+      isPremium: {
+        defaultValue: false,
+      }
     },
   },
 });

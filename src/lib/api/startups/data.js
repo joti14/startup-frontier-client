@@ -13,7 +13,7 @@ export const fetchLatestStartups = async () => {
 };
 
 export const fetchAllStartups = async (params = {}) => {
-    const qs = new URLSearchParams({ featured: "true", ...params }).toString();
+    const qs = new URLSearchParams(params).toString();
     const res = await fetch(`${baseURL}/api/startups?${qs}`);
     if (!res.ok) return [];
     return res.json();

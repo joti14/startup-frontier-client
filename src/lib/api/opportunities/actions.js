@@ -6,7 +6,6 @@ export const addOpportunity = async (data) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
     });
-    if (!res.ok) return null;
     return res.json();
 };
 

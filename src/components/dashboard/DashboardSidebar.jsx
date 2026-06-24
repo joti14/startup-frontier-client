@@ -112,17 +112,6 @@ export default function DashboardSideBar({ onPremiumTrigger }) {
 
       {/* ─── FOOTER LINK ACTIONS BLOCK ─── */}
       <div className="px-3 py-1.5 border-t border-slate-100 dark:border-slate-900 space-y-1 shrink-0 bg-white dark:bg-slate-950">
-        {/* Upgrade Premium Option */}
-        <button
-          type="button"
-          onClick={onPremiumTrigger}
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold text-amber-700 bg-amber-500/5 hover:bg-amber-500/10 dark:text-amber-400 dark:bg-amber-500/3 transition-all duration-200 cursor-pointer border border-amber-500/10 group"
-        >
-          <span className="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-            <Crown size={14} className="fill-current" />
-          </span>
-          Go Premium
-        </button>
 
         {/* Back home pointer */}
         <Link href="/" className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-all duration-200">

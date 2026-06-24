@@ -65,13 +65,19 @@ export default function StartupForm({ existingStartup, onSuccess }) {
     });
 
     useEffect(() => {
+        if (session?.user?.email) {
+            setValue("founderEmail", session.user.email);
+        }
+    }, [session, setValue]);
+
+    useEffect(() => {
         if (existingStartup) {
             reset({
                 startupName: existingStartup.startupName || "",
                 industry: existingStartup.industry || "",
                 description: existingStartup.description || "",
                 fundingStage: existingStartup.fundingStage || "Pre-seed",
-                founderEmail: existingStartup.founderEmail || "",
+                founderEmail: existingStartup.founderEmail || session?.user?.email || "",
                 logoUrl: existingStartup.logoUrl || "",
                 teamSizeNeeded: existingStartup.teamSizeNeeded || ""
             });
@@ -270,12 +276,12 @@ export default function StartupForm({ existingStartup, onSuccess }) {
                     <div className="relative">
                         <input
                             type="email"
-                            placeholder="founder@yourcompany.com"
+                            readOnly
                             {...register("founderEmail", {
                                 required: "Contact email is required",
                                 pattern: { value: /^\S+@\S+$/i, message: "Invalid email formatting" }
                             })}
-                            className="w-full bg-white dark:bg-slate-900 text-slate-950 dark:text-white border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3.5 py-2 text-xs font-medium placeholder-slate-400 outline-none transition-all duration-200 focus:border-slate-400 dark:focus:border-slate-600 focus:bg-slate-50/30 dark:focus:bg-slate-900/30"
+                            className="w-full bg-slate-50 dark:bg-slate-900/60 text-slate-500 dark:text-slate-500 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3.5 py-2 text-xs font-medium outline-none cursor-not-allowed"
                         />
                         <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                     </div>

@@ -11,3 +11,8 @@ export const updateStartup = async (data, id) => {
     const resData = await serverMutation(`/api/founder/${id}`, 'PATCH', data);
     return resData;
 }
+
+export const deleteStartup = async (id) => {
+    const resData = await serverMutation(`/api/founder/${id}`, 'DELETE');
+    return resData;
+}

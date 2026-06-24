@@ -35,14 +35,6 @@ export default function WhyChooseUs() {
   return (
     <section className="relative w-full py-24 overflow-hidden bg-transparent">
 
-      {/* ─── BACKGROUND ─── */}
-      {/* <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[55rem] h-[40rem] rounded-full bg-blue-100/25 dark:bg-blue-900/10 blur-[120px]" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] [background-size:4.5rem_4.5rem] [mask-image:radial-gradient(ellipse_70%_65%_at_50%_50%,#000_70%,transparent_100%)] opacity-50" />
-        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-slate-50/80 via-slate-50/20 to-transparent dark:from-slate-950 dark:via-slate-950/20" />
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-slate-50/80 via-slate-50/20 to-transparent dark:from-slate-950 dark:via-slate-950/20" />
-      </div> */}
-
       <div className="relative z-10 max-w-5xl mx-auto px-6">
 
         {/* ─── HEADING ─── */}
@@ -95,24 +87,6 @@ export default function WhyChooseUs() {
           ))}
         </div>
 
-        {/* ─── STATS STRIP ─── */}
-        {/* <div className="mt-20 grid grid-cols-2 sm:grid-cols-4 gap-px bg-slate-200 dark:bg-slate-800 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800">
-          {stats.map(({ value, label }) => (
-            <div
-              key={label}
-              className="bg-white dark:bg-slate-900 px-6 py-8 flex flex-col items-center text-center gap-1"
-            >
-              <span className="text-3xl font-extrabold text-slate-950 dark:text-white tracking-tight">
-                {value}
-              </span>
-              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                {label}
-              </span>
-            </div>
-          ))}
-        </div> */}
-
-        {/* ─── BELOW COPY ─── */}
         <div className="mt-20 grid sm:grid-cols-2 gap-10 items-center">
           {/* Left — trust statement */}
           <div className="space-y-4">

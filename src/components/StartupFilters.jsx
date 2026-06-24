@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { useCallback, useState, useTransition } from "react";
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import { useCallback, useState, useTransition, useEffect } from "react";
+import { Search, SlidersHorizontal, RotateCcw } from "lucide-react";
 import {
     Select,
     SelectContent,
@@ -37,14 +37,17 @@ export default function StartupFilters() {
         startTransition(() => router.replace(`${pathname}?${params.toString()}`));
     }, [searchParams, pathname, router]);
 
-    const handleSearchSubmit = (e) => {
-        e.preventDefault();
-        updateParams("search", search.trim());
-    };
+    // Live search with debounce
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            updateParams("search", search.trim());
+        }, 400);
+        return () => clearTimeout(timeout);
+    }, [search]);
 
-    const clearSearch = () => {
+    const clearAll = () => {
         setSearch("");
-        updateParams("search", "");
+        startTransition(() => router.replace(pathname));
     };
 
     const hasActiveFilters =
@@ -52,35 +55,21 @@ export default function StartupFilters() {
         searchParams.get("industry") ||
         searchParams.get("fundingStage");
 
-    const clearAll = () => {
-        setSearch("");
-        startTransition(() => router.replace(pathname));
-    };
-
     return (
         <div className="flex flex-col gap-3">
             <div className="flex flex-col sm:flex-row gap-3">
 
                 {/* Search */}
-                <form onSubmit={handleSearchSubmit} className="relative flex-1">
+                <div className="relative flex-1">
                     <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
                     <input
                         type="text"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         placeholder="Search startups by name, industry, or description..."
-                        className="w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 rounded-xl pl-10 pr-10 py-2.5 text-xs font-medium placeholder-slate-400 outline-none transition-all duration-200 focus:border-slate-400 dark:focus:border-slate-700 shadow-sm"
+                        className="w-full bg-white dark:bg-slate-950 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 rounded-xl pl-10 pr-3.5 py-2.5 text-xs font-medium placeholder-slate-400 outline-none transition-all duration-200 focus:border-slate-400 dark:focus:border-slate-700 shadow-sm"
                     />
-                    {search && (
-                        <button
-                            type="button"
-                            onClick={clearSearch}
-                            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
-                        >
-                            <X className="h-3.5 w-3.5" />
-                        </button>
-                    )}
-                </form>
+                </div>
 
                 {/* Industry filter */}
                 <div className="relative sm:w-48">
@@ -120,44 +109,20 @@ export default function StartupFilters() {
                         </SelectContent>
                     </Select>
                 </div>
-            </div>
 
-            {/* Active filter chips + clear all */}
-            {hasActiveFilters && (
-                <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-[11px] text-slate-400 font-medium">Filtering by:</span>
-                    {searchParams.get("search") && (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#635BFF]/10 border border-[#635BFF]/20 text-[11px] font-semibold text-[#635BFF]">
-                            &ldquo;{searchParams.get("search")}&rdquo;
-                            <button onClick={() => { setSearch(""); updateParams("search", ""); }}>
-                                <X className="h-3 w-3" />
-                            </button>
-                        </span>
-                    )}
-                    {searchParams.get("industry") && (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-violet-50 dark:bg-violet-950/30 border border-violet-100 dark:border-violet-900/40 text-[11px] font-semibold text-violet-600 dark:text-violet-400">
-                            {searchParams.get("industry")}
-                            <button onClick={() => updateParams("industry", "")}>
-                                <X className="h-3 w-3" />
-                            </button>
-                        </span>
-                    )}
-                    {searchParams.get("fundingStage") && (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-100 dark:border-emerald-900/40 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
-                            {searchParams.get("fundingStage")}
-                            <button onClick={() => updateParams("fundingStage", "")}>
-                                <X className="h-3 w-3" />
-                            </button>
-                        </span>
-                    )}
-                    <button
-                        onClick={clearAll}
-                        className="text-[11px] font-semibold text-slate-400 hover:text-rose-500 transition-colors ml-1"
-                    >
-                        Clear all
-                    </button>
-                </div>
-            )}
+                {/* Refresh / Clear icon */}
+                <button
+                    onClick={clearAll}
+                    title="Clear all filters"
+                    className={`flex items-center justify-center w-10 h-10 rounded-xl border transition-all duration-200 shrink-0 shadow-sm ${
+                        hasActiveFilters
+                            ? "border-[#635BFF] text-[#635BFF] bg-[#635BFF]/5 hover:bg-[#635BFF]/10"
+                            : "border-slate-200 dark:border-slate-800 text-slate-400 bg-white dark:bg-slate-950 hover:text-slate-600"
+                    }`}
+                >
+                    <RotateCcw className="h-3.5 w-3.5" />
+                </button>
+            </div>
 
             {isPending && (
                 <p className="text-[11px] text-slate-400 animate-pulse">Updating results...</p>

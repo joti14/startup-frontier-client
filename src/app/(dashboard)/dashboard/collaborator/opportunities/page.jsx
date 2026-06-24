@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import DashboardHeading from "@/components/dashboard/DashboardHeading";
-import { Loader2, Search, Filter } from "lucide-react";
+import { Loader2, Search, Filter, RotateCcw } from "lucide-react";
 import { fetchAllOpportunities } from "@/lib/api/opportunities/data";
 import OpportunityCard from "@/components/OpportunityCard";
 import {
@@ -56,6 +56,7 @@ export default function BrowseOpportunitiesPage() {
 
             {/* Filters Section */}
             <div className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm mb-6 flex flex-col md:flex-row gap-4 items-end">
+
                 
                 {/* Search */}
                 <div className="flex-1 w-full flex flex-col gap-1.5">
@@ -108,6 +109,19 @@ export default function BrowseOpportunitiesPage() {
                         </SelectContent>
                     </Select>
                 </div>
+
+                {/* Refresh / Clear */}
+                <button
+                    onClick={() => { setSearchQuery(""); setWorkType(""); setIndustry(""); }}
+                    title="Clear all filters"
+                    className={`flex items-center justify-center w-9 h-9 rounded-xl border transition-all duration-200 shrink-0 ${
+                        searchQuery || workType || industry
+                            ? "border-[#635BFF] text-[#635BFF] bg-[#635BFF]/5 hover:bg-[#635BFF]/10"
+                            : "border-slate-200 dark:border-slate-800 text-slate-400 bg-slate-50 dark:bg-slate-900 hover:text-slate-600"
+                    }`}
+                >
+                    <RotateCcw className="h-3.5 w-3.5" />
+                </button>
 
             </div>
 

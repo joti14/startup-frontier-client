@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Quote } from "lucide-react";
+import { motion } from "motion/react";
 
 const testimonials = [
   {
@@ -81,15 +82,33 @@ export default function Testimonials() {
 
         {/* ─── HEADER ─── */}
         <div className="text-center mb-14 space-y-3">
-          <p className="text-[11px] font-semibold tracking-widest uppercase text-pink-600">
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+
+            className="text-[11px] font-semibold tracking-widest uppercase text-pink-600">
             What builders say
-          </p>
-          <h2 className="text-4xl sm:text-5xl font-extrabold text-slate-950 dark:text-white tracking-tight">
+          </motion.p>
+          <motion.h2
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+
+            className="text-4xl sm:text-5xl font-extrabold text-slate-950 dark:text-white tracking-tight">
             Trusted by real teams
-          </h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto leading-relaxed font-medium">
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+
+            className="text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto leading-relaxed font-medium">
             Not case studies. Not hand-picked PR quotes. Just builders who found their people here.
-          </p>
+          </motion.p>
         </div>
 
         {/* ─── CARD ─── */}
@@ -124,11 +143,10 @@ export default function Testimonials() {
               key={i}
               onClick={() => goTo(i)}
               aria-label={`Go to testimonial ${i + 1}`}
-              className={`rounded-full transition-all duration-300 cursor-pointer ${
-                i === active
-                  ? "w-5 h-1.5 bg-slate-900 dark:bg-white"
-                  : "w-1.5 h-1.5 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400"
-              }`}
+              className={`rounded-full transition-all duration-300 cursor-pointer ${i === active
+                ? "w-5 h-1.5 bg-slate-900 dark:bg-white"
+                : "w-1.5 h-1.5 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400"
+                }`}
             />
           ))}
         </div>
@@ -140,11 +158,10 @@ export default function Testimonials() {
               key={i}
               onClick={() => goTo(i)}
               aria-label={`View testimonial ${i + 1}`}
-              className={`h-9 w-9 rounded-full flex items-center justify-center text-[10px] font-bold transition-all duration-200 cursor-pointer ${ac} ${
-                i === active
-                  ? "ring-2 ring-offset-2 ring-slate-400 dark:ring-slate-600 scale-110"
-                  : "opacity-50 hover:opacity-80"
-              }`}
+              className={`h-9 w-9 rounded-full flex items-center justify-center text-[10px] font-bold transition-all duration-200 cursor-pointer ${ac} ${i === active
+                ? "ring-2 ring-offset-2 ring-slate-400 dark:ring-slate-600 scale-110"
+                : "opacity-50 hover:opacity-80"
+                }`}
             >
               {ini}
             </button>

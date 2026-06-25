@@ -9,14 +9,14 @@ function AnimatedCount({ targetValue }) {
 
   useEffect(() => {
     if (!targetValue) return;
-    
+
     let start = 0;
     const duration = 1200; // Animation speed runtime (1.2 seconds)
     const speed = Math.max(Math.floor(duration / targetValue), 15);
-    
+
     const counterInterval = setInterval(() => {
       // Dynamically calculate increments to make high numbers scroll smoothly
-      start += Math.ceil(targetValue / 30); 
+      start += Math.ceil(targetValue / 30);
       if (start >= targetValue) {
         setCount(targetValue);
         clearInterval(counterInterval);
@@ -42,11 +42,9 @@ export default function Statistics({ stats }) {
 
         {/* ─── SEPARATE INDEPENDENT BORDERED CARDS GRID ─── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-          
+
           {/* Card 1: Total Startups */}
-          <div 
-            className="group p-8 lg:p-10 text-center rounded-3xl border border-slate-200/90 dark:border-slate-800/90 bg-white/50 dark:bg-slate-950/60 backdrop-blur-md shadow-[0_10px_30px_-10px_rgba(15,23,42,0.04)] transition-all duration-300 hover:bg-white dark:hover:bg-slate-900/60 hover:shadow-[0_15px_40px_-10px_rgba(15,23,42,0.08)] hover:scale-[1.02] cursor-default animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out fill-mode-both"
-          >
+          <div className="group p-8 lg:p-10 text-center rounded-3xl border border-slate-200/90 dark:border-slate-800/90 bg-white/50 dark:bg-slate-950/60 backdrop-blur-md shadow-[0_10px_30px_-10px_rgba(15,23,42,0.04)] transition-all duration-300 hover:bg-white dark:hover:bg-slate-900/60 hover:shadow-[0_15px_40px_-10px_rgba(15,23,42,0.08)] hover:scale-[1.02] cursor-default animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out fill-mode-both">
             <div className="mx-auto w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 flex items-center justify-center border border-slate-200/60 dark:border-slate-800 transition-all duration-300 group-hover:scale-110 group-hover:border-slate-400 dark:group-hover:border-slate-600 shadow-sm">
               <Rocket className="h-4 w-4 text-slate-800 dark:text-slate-200" />
             </div>
@@ -61,7 +59,7 @@ export default function Statistics({ stats }) {
           </div>
 
           {/* Card 2: Total Collaborators */}
-          <div 
+          <div
             className="group p-8 lg:p-10 text-center rounded-3xl border border-slate-200/90 dark:border-slate-800/90 bg-white/50 dark:bg-slate-950/60 backdrop-blur-md shadow-[0_10px_30px_-10px_rgba(15,23,42,0.04)] transition-all duration-300 hover:bg-pink-50/10 dark:hover:bg-pink-950/10 hover:border-pink-200/60 dark:hover:border-pink-900/40 hover:shadow-[0_15px_40px_-10px_rgba(219,39,119,0.05)] hover:scale-[1.02] cursor-default animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out fill-mode-both"
             style={{ animationDelay: "150ms" }}
           >
@@ -79,7 +77,7 @@ export default function Statistics({ stats }) {
           </div>
 
           {/* Card 3: Active Opportunities */}
-          <div 
+          <div
             className="group p-8 lg:p-10 text-center rounded-3xl border border-slate-200/90 dark:border-slate-800/90 bg-white/50 dark:bg-slate-950/60 backdrop-blur-md shadow-[0_10px_30px_-10px_rgba(15,23,42,0.04)] transition-all duration-300 hover:bg-white dark:hover:bg-slate-900/60 hover:shadow-[0_15px_40px_-10px_rgba(15,23,42,0.08)] hover:scale-[1.02] cursor-default animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out fill-mode-both"
             style={{ animationDelay: "300ms" }}
           >

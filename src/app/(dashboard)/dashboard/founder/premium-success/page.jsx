@@ -26,13 +26,17 @@ export default async function PremiumSuccess({ searchParams }) {
         amount: session?.amount_total / 100,
     };
 
-    await fetch(`${baseURL}/api/users/upgrade-premium/${customerEmail}`, {
-        method: 'PATCH',
-        headers: { 
-            'Content-Type': 'application/json' 
-        },
-        body: JSON.stringify(paymentData),
-    });
+    try {
+        const upgradeRes = await fetch(`${baseURL}/api/users/upgrade-premium/${customerEmail}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(paymentData),
+        });
+        const upgradeData = await upgradeRes.json();
+        console.log("[premium-success] upgrade result:", upgradeData);
+    } catch (err) {
+        console.error("[premium-success] upgrade fetch failed:", err);
+    }
 
     return (
         <div className="min-h-screen flex items-center justify-center px-6 py-16">

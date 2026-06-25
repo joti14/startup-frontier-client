@@ -80,7 +80,7 @@ export default function DashboardSideBar({ onPremiumTrigger }) {
         </div>
       </div>
 
-      {/* ─── INTERACTIVE NAVIGATION NAVIGATION  ─── */}
+      {/* ─── INTERACTIVE NAVIGATION  ─── */}
       <nav className="grow overflow-y-auto px-3 py-5 space-y-1 custom-scrollbar">
         <p className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest px-3 pb-2">Workspace</p>
         {menuItems.map(({ key, label, icon: Icon, href }) => {

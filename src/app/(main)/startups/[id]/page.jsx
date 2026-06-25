@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { fetchStartupById } from "@/lib/api/startups/data";
 import { myOpportunities } from "@/lib/api/opportunities/data";
 import { notFound } from "next/navigation";

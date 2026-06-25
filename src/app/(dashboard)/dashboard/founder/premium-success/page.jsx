@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
     title: "Upgrade Successful",
     description: "You're now a Premium founder on Startup Frontier.",
@@ -15,7 +17,8 @@ export default async function PremiumSuccess({ searchParams }) {
     if (!session_id)
         throw new Error('Please provide a valid session_id (`cs_test_...`)');
 
-    const session = await getStripe().checkout.sessions.retrieve(session_id, {
+    const stripe = await getStripe();
+    const session = await stripe.checkout.sessions.retrieve(session_id, {
         expand: ['line_items', 'payment_intent'],
     });
 

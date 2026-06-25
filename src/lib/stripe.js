@@ -1,5 +1,6 @@
 import 'server-only'
 
-import Stripe from 'stripe'
-
-export const getStripe = () => new Stripe(process.env.STRIPE_SECRET_KEY)
+export const getStripe = async () => {
+  const Stripe = (await import('stripe')).default;
+  return new Stripe(process.env.STRIPE_SECRET_KEY);
+};

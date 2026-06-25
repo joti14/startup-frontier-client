@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
     title: "Browse Startups",
     description: "Explore early-stage startups building across every industry. Find one that matches your skills.",

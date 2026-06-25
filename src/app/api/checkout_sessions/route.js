@@ -13,7 +13,8 @@ export async function POST() {
     const user = await getUser();
 
     // Create Checkout Sessions from body params.
-    const session = await getStripe().checkout.sessions.create({
+    const stripe = await getStripe();
+    const session = await stripe.checkout.sessions.create({
       customer_email: user?.email,
       line_items: [
         {

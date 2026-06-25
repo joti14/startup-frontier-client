@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import DashboardHeading from "@/components/dashboard/DashboardHeading";
 import toast from "react-hot-toast";
+import { baseURL } from "@/lib/api/baseUrl";
 
 const FREE_FEATURES = [
     "Post up to 3 opportunities",
@@ -34,7 +35,11 @@ export default function UpgradePage() {
     const handleUpgrade = async () => {
         setIsLoading(true);
         try {
-            const res = await fetch("/api/checkout_sessions", { method: "POST" });
+            const res = await fetch(`${baseURL}/api/create-checkout-session`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ userEmail: session?.user?.email, origin: window.location.origin }),
+            });
             const data = await res.json();
             if (data?.url) {
                 window.location.href = data.url;

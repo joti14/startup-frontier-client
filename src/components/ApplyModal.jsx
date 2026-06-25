@@ -64,6 +64,21 @@ export default function ApplyModal({ opportunity, startup }) {
         }
     };
 
+    const isOwner = session?.user?.email && session.user.email === startup.founderEmail;
+    const isFounder = session?.user?.role === "founder";
+    const cannotApply = isOwner || isFounder;
+
+    if (cannotApply) {
+        return (
+            <div className="flex flex-col items-end gap-1">
+                <Button disabled className="w-full sm:w-auto cursor-not-allowed opacity-60">Apply Now</Button>
+                <p className="text-[11px] text-slate-400 dark:text-slate-500">
+                    {isOwner ? "You own this startup." : "Founders cannot apply to opportunities."}
+                </p>
+            </div>
+        );
+    }
+
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>

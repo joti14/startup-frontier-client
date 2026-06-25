@@ -2,14 +2,20 @@ import { betterAuth } from "better-auth";
 import { MongoClient } from "mongodb";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 
-const client = new MongoClient(process.env.MONGODB_URI);
-const db = client.db(process.env.DB_NAME);
+const mongoClient = new MongoClient(process.env.MONGODB_URI);
+
+async function getDB() {
+  await mongoClient.connect();
+  return mongoClient.db(process.env.DB_NAME);
+}
+
+const db = mongoClient.db(process.env.DB_NAME);
 
 export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET,
   baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
   database: mongodbAdapter(db, {
-    client,
+    client: mongoClient,
   }),
   trustedOrigins: [
     "http://localhost:3000",

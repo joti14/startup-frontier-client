@@ -43,8 +43,6 @@ export default function DashboardSideBar({ onPremiumTrigger }) {
     { key: "overview", label: "Overview", icon: LayoutDashboard, href: "/dashboard/collaborator" },
     { key: "browse", label: "Browse Opportunities", icon: Search, href: "/dashboard/collaborator/opportunities" },
     { key: "applications", label: "My Applications", icon: FileText, href: "/dashboard/collaborator/applications" },
-    { key: "saved", label: "Saved Startups", icon: Bookmark, href: "/dashboard/collaborator/saved" },
-    { key: "profile", label: "Profile", icon: User, href: "/dashboard/collaborator/profile" },
   ];
 
   const menuItems = userRole === "founder" ? founderMenuItems : userRole === "collaborator" ? collaboratorMenuItems : userRole === "admin" ? adminMenu : null;

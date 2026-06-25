@@ -1,7 +1,11 @@
 import { baseURL } from "../baseUrl";
+import { authHeaders } from "../authHeaders";
 
 export const myOpportunities = async (email) => {
-    const res = await fetch(`${baseURL}/api/opportunities/${email}`);
+    const res = await fetch(`${baseURL}/api/opportunities/${email}`, {
+        headers: authHeaders(),
+        credentials: "include",
+    });
     if (!res.ok) return [];
     return res.json();
 };

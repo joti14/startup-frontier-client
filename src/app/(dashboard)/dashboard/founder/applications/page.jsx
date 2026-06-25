@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSession } from "@/lib/auth-client";
 import DashboardHeading from "@/components/dashboard/DashboardHeading";
-import { Loader2, CheckCircle, XCircle, FileText, Link as LinkIcon, User, RefreshCw } from "lucide-react";
+import { Loader2, CheckCircle, XCircle, FileText, Link as LinkIcon, User, RefreshCw, Eye } from "lucide-react";
 import toast from "react-hot-toast";
 import {
   Table,
@@ -13,6 +13,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { baseURL } from "@/lib/api/baseUrl";
 
 export default function ApplicationsPage() {
@@ -20,6 +26,7 @@ export default function ApplicationsPage() {
     const [applications, setApplications] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [actionLoading, setActionLoading] = useState(null);
+    const [viewApp, setViewApp] = useState(null);
 
     const fetchApps = useCallback(async (email) => {
         setIsLoading(true);
@@ -72,6 +79,7 @@ export default function ApplicationsPage() {
     const email = session?.user?.email;
 
     return (
+        <>
         <div className="max-w-6xl px-6 py-4">
             <div className="flex items-center justify-between mb-2">
                 <DashboardHeading title="Applications" description="Review and manage applications for your open roles." />
@@ -114,7 +122,7 @@ export default function ApplicationsPage() {
                             <TableRow>
                                 <TableHead className="w-[200px] text-xs font-bold uppercase text-slate-500">Applicant</TableHead>
                                 <TableHead className="text-xs font-bold uppercase text-slate-500">Role</TableHead>
-                                <TableHead className="text-xs font-bold uppercase text-slate-500">Documents</TableHead>
+                                <TableHead className="text-xs font-bold uppercase text-slate-500">Details</TableHead>
                                 <TableHead className="text-xs font-bold uppercase text-slate-500">Status</TableHead>
                                 <TableHead className="text-right text-xs font-bold uppercase text-slate-500">Actions</TableHead>
                             </TableRow>
@@ -137,23 +145,13 @@ export default function ApplicationsPage() {
                                         <p className="text-xs text-slate-400 mt-0.5">{app.startupName}</p>
                                     </TableCell>
 
-                                    <TableCell className="align-top py-4 max-w-xs">
-                                        <div className="space-y-3">
-                                            <div>
-                                                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1 mb-1"><FileText className="w-3 h-3" /> Cover Letter</p>
-                                                <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2" title={app.coverLetter}>
-                                                    {app.coverLetter}
-                                                </p>
-                                            </div>
-                                            {app.resumeLink && (
-                                                <div>
-                                                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1 mb-1"><LinkIcon className="w-3 h-3" /> Portfolio / Resume</p>
-                                                    <a href={app.resumeLink} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 dark:text-blue-400 hover:underline">
-                                                        View Link
-                                                    </a>
-                                                </div>
-                                            )}
-                                        </div>
+                                    <TableCell className="align-top py-4">
+                                        <button
+                                            onClick={() => setViewApp(app)}
+                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 hover:bg-[#635BFF]/5 border border-slate-200 dark:border-slate-700 dark:bg-slate-900 hover:border-[#635BFF]/30 text-slate-600 dark:text-slate-300 hover:text-[#635BFF] rounded-lg text-xs font-semibold transition-colors"
+                                        >
+                                            <Eye className="w-3.5 h-3.5" /> View
+                                        </button>
                                     </TableCell>
 
                                     <TableCell className="align-top py-4">
@@ -197,5 +195,71 @@ export default function ApplicationsPage() {
                 </div>
             )}
         </div>
+        {/* View Application Modal */}
+        <Dialog open={!!viewApp} onOpenChange={(open) => !open && setViewApp(null)}>
+            <DialogContent className="sm:max-w-md bg-white dark:bg-slate-950">
+                <DialogHeader>
+                    <DialogTitle className="text-sm font-bold text-slate-900 dark:text-white">
+                        Application — {viewApp?.opportunityTitle}
+                    </DialogTitle>
+                </DialogHeader>
+                {viewApp && (
+                    <div className="space-y-4 pt-1">
+                        <div className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-900 rounded-xl">
+                            <div className="w-8 h-8 rounded-lg bg-[#635BFF]/10 flex items-center justify-center shrink-0">
+                                <User className="w-4 h-4 text-[#635BFF]" />
+                            </div>
+                            <div>
+                                <p className="text-sm font-bold text-slate-900 dark:text-white">{viewApp.applicantName}</p>
+                                <p className="text-xs text-slate-400">{viewApp.applicantEmail}</p>
+                            </div>
+                        </div>
+
+                        <div className="space-y-1.5">
+                            <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
+                                <FileText className="w-3 h-3" /> Motivation Message
+                            </p>
+                            <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-900 rounded-xl p-3">
+                                {viewApp.coverLetter || "—"}
+                            </p>
+                        </div>
+
+                        {viewApp.resumeLink && (
+                            <div className="space-y-1.5">
+                                <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
+                                    <LinkIcon className="w-3 h-3" /> Portfolio / Resume
+                                </p>
+                                <a
+                                    href={viewApp.resumeLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1.5 text-xs text-[#635BFF] hover:underline font-medium"
+                                >
+                                    <LinkIcon className="w-3 h-3" /> {viewApp.resumeLink}
+                                </a>
+                            </div>
+                        )}
+
+                        {viewApp.status === "pending" && (
+                            <div className="flex gap-2 pt-2">
+                                <button
+                                    onClick={() => { handleUpdateStatus(viewApp._id, "accepted"); setViewApp(null); }}
+                                    className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400 rounded-xl text-xs font-bold transition-colors"
+                                >
+                                    <CheckCircle className="w-3.5 h-3.5" /> Accept
+                                </button>
+                                <button
+                                    onClick={() => { handleUpdateStatus(viewApp._id, "rejected"); setViewApp(null); }}
+                                    className="flex-1 flex items-center justify-center gap-1.5 py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 dark:bg-rose-900/20 dark:text-rose-400 rounded-xl text-xs font-bold transition-colors"
+                                >
+                                    <XCircle className="w-3.5 h-3.5" /> Reject
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </DialogContent>
+        </Dialog>
+        </>
     );
 }

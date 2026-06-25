@@ -67,7 +67,15 @@ export default function ApplyModal({ opportunity, startup }) {
     };
 
     const isOwner = session?.user?.email && session.user.email === startup.founderEmail;
-    const isFounder = session?.user?.role === "founder";
+    const role = session?.user?.role || (() => {
+        try {
+            const token = typeof window !== "undefined" ? localStorage.getItem("jwt_token") : null;
+            if (!token) return null;
+            const payload = JSON.parse(atob(token.split(".")[1]));
+            return payload.role;
+        } catch { return null; }
+    })();
+    const isFounder = role === "founder" || role === "admin";
     const cannotApply = isOwner || isFounder;
 
     if (!session?.user) {

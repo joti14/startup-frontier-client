@@ -5,7 +5,7 @@ export const metadata = {
 
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { stripe } from '@/lib/stripe';
+import { getStripe } from '@/lib/stripe';
 import { baseURL } from '@/lib/api/baseUrl';
 import { Crown, CheckCircle2, ArrowRight, Sparkles, Zap, Infinity } from 'lucide-react';
 
@@ -15,7 +15,7 @@ export default async function PremiumSuccess({ searchParams }) {
     if (!session_id)
         throw new Error('Please provide a valid session_id (`cs_test_...`)');
 
-    const session = await stripe.checkout.sessions.retrieve(session_id, {
+    const session = await getStripe().checkout.sessions.retrieve(session_id, {
         expand: ['line_items', 'payment_intent'],
     });
 

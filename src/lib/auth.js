@@ -29,7 +29,13 @@ export const auth = betterAuth({
       },
       isPremium: {
         defaultValue: false,
-      }
+      },
+      skills: {
+        defaultValue: "",
+      },
+      bio: {
+        defaultValue: "",
+      },
     },
   },
 });

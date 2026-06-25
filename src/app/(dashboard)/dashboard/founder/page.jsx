@@ -7,6 +7,7 @@ import DashboardHeading from "@/components/dashboard/DashboardHeading";
 import UpgradePremiumButton from "@/components/UpgradePremiumButton";
 import { Briefcase, Users2, UserCheck, Crown, ArrowRight, Loader2 } from "lucide-react";
 import { baseURL } from "@/lib/api/baseUrl";
+import { authHeaders } from "@/lib/api/authHeaders";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
 const STATUS_COLORS = { Pending: "#F59E0B", Accepted: "#10B981", Rejected: "#F43F5E" };
@@ -27,8 +28,8 @@ export default function FounderOverviewPage() {
             setIsLoading(true);
             try {
                 const [oppsRes, appsRes] = await Promise.all([
-                    fetch(`${baseURL}/api/opportunities/${email}`, { credentials: "include" }),
-                    fetch(`${baseURL}/api/applications/founder/${email}`, { credentials: "include" }),
+                    fetch(`${baseURL}/api/opportunities/${email}`, { headers: authHeaders(), credentials: "include" }),
+                    fetch(`${baseURL}/api/applications/founder/${email}`, { headers: authHeaders(), credentials: "include" }),
                 ]);
                 const opps = oppsRes.ok ? await oppsRes.json() : [];
                 const apps = appsRes.ok ? await appsRes.json() : [];

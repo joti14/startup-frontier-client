@@ -5,6 +5,7 @@ import { useSession } from "@/lib/auth-client";
 import DashboardHeading from "@/components/dashboard/DashboardHeading";
 import { Users, Rocket, Briefcase, DollarSign, Crown, Loader2, ShieldAlert } from "lucide-react";
 import { baseURL } from "@/lib/api/baseUrl";
+import { authHeaders } from "@/lib/api/authHeaders";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
 const ROLE_COLORS = { founder: "#635BFF", collaborator: "#10B981", admin: "#F59E0B" };
@@ -20,8 +21,8 @@ export default function AdminOverviewPage() {
     useEffect(() => {
         if (!isAdmin) return;
         Promise.all([
-            fetch(`${baseURL}/api/admin/stats`, { credentials: "include" }).then((r) => r.json()),
-            fetch(`${baseURL}/api/admin/users`, { credentials: "include" }).then((r) => r.json()),
+            fetch(`${baseURL}/api/admin/stats`, { headers: authHeaders(), credentials: "include" }).then((r) => r.json()),
+            fetch(`${baseURL}/api/admin/users`, { headers: authHeaders(), credentials: "include" }).then((r) => r.json()),
         ]).then(([statsData, usersData]) => {
             setStats(statsData);
             setUsers(Array.isArray(usersData) ? usersData : []);

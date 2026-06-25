@@ -9,6 +9,7 @@ import {
 import DashboardHeading from "@/components/dashboard/DashboardHeading";
 import toast from "react-hot-toast";
 import { baseURL } from "@/lib/api/baseUrl";
+import { authHeaders } from "@/lib/api/authHeaders";
 
 const FREE_FEATURES = [
     "Post up to 3 opportunities",
@@ -37,7 +38,7 @@ export default function UpgradePage() {
         try {
             const res = await fetch(`${baseURL}/api/create-checkout-session`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: authHeaders(),
                 body: JSON.stringify({ userEmail: session?.user?.email, origin: window.location.origin }),
             });
             const data = await res.json();

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import DashboardHeading from "@/components/dashboard/DashboardHeading";
 import { Loader2, RefreshCw, Receipt } from "lucide-react";
 import { baseURL } from "@/lib/api/baseUrl";
+import { authHeaders } from "@/lib/api/authHeaders";
 import toast from "react-hot-toast";
 import {
     Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
@@ -16,7 +17,7 @@ export default function AdminTransactionsPage() {
     const fetchTransactions = async () => {
         setIsLoading(true);
         try {
-            const res = await fetch(`${baseURL}/api/admin/transactions`, { credentials: "include" });
+            const res = await fetch(`${baseURL}/api/admin/transactions`, { headers: authHeaders(), credentials: "include" });
             const data = await res.json();
             setTransactions(Array.isArray(data) ? data : []);
         } catch {

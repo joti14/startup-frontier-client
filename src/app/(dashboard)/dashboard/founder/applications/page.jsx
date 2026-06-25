@@ -20,6 +20,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { baseURL } from "@/lib/api/baseUrl";
+import { authHeaders } from "@/lib/api/authHeaders";
 
 export default function ApplicationsPage() {
     const { data: session } = useSession();
@@ -32,7 +33,7 @@ export default function ApplicationsPage() {
         setIsLoading(true);
         try {
             console.log("[Applications] Fetching for founder email:", email);
-            const res = await fetch(`${baseURL}/api/applications/founder/${email}`, { credentials: "include" });
+            const res = await fetch(`${baseURL}/api/applications/founder/${email}`, { headers: authHeaders(), credentials: "include" });
             console.log("[Applications] Response status:", res.status);
             const data = await res.json();
             console.log("[Applications] Data received:", data);
@@ -56,7 +57,7 @@ export default function ApplicationsPage() {
         try {
             const res = await fetch(`${baseURL}/api/applications/${appId}`, {
                 method: "PATCH",
-                headers: { "Content-Type": "application/json" },
+                headers: authHeaders(),
                 body: JSON.stringify({ status: newStatus }),
             });
             const result = await res.json();

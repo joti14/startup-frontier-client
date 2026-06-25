@@ -8,6 +8,7 @@ import {
     Code2, Building2, Mail, Loader2, AlertCircle
 } from "lucide-react";
 import { baseURL } from "@/lib/api/baseUrl";
+import { authHeaders } from "@/lib/api/authHeaders";
 import ApplyModal from "@/components/ApplyModal";
 
 export default function OpportunityDetailPage() {
@@ -24,13 +25,13 @@ export default function OpportunityDetailPage() {
             setIsLoading(true);
             try {
                 // Fetch opportunity
-                const oppRes = await fetch(`${baseURL}/api/opportunities/detail/${id}`, { credentials: "include" });
+                const oppRes = await fetch(`${baseURL}/api/opportunities/detail/${id}`, { headers: authHeaders(), credentials: "include" });
                 const opp = oppRes.ok ? await oppRes.json() : null;
                 setOpportunity(opp);
 
                 // Fetch associated startup by founderEmail
                 if (opp?.founderEmail) {
-                    const stRes = await fetch(`${baseURL}/api/founder/${opp.founderEmail}`, { credentials: "include" });
+                    const stRes = await fetch(`${baseURL}/api/founder/${opp.founderEmail}`, { headers: authHeaders(), credentials: "include" });
                     const st = stRes.ok ? await stRes.json() : null;
                     setStartup(st);
                 }

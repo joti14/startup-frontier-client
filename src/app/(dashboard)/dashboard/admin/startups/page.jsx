@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import DashboardHeading from "@/components/dashboard/DashboardHeading";
 import { Loader2, CheckCircle, Trash2, RefreshCw, Rocket } from "lucide-react";
 import { baseURL } from "@/lib/api/baseUrl";
+import { authHeaders } from "@/lib/api/authHeaders";
 import toast from "react-hot-toast";
 import {
     Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
@@ -17,7 +18,7 @@ export default function AdminStartupsPage() {
     const fetchStartups = async () => {
         setIsLoading(true);
         try {
-            const res = await fetch(`${baseURL}/api/admin/startups`, { credentials: "include" });
+            const res = await fetch(`${baseURL}/api/admin/startups`, { headers: authHeaders(), credentials: "include" });
             const data = await res.json();
             setStartups(Array.isArray(data) ? data : []);
         } catch {
@@ -32,7 +33,7 @@ export default function AdminStartupsPage() {
     const handleApprove = async (id) => {
         setActionLoading(id + "_approve");
         try {
-            const res = await fetch(`${baseURL}/api/admin/startups/approve/${id}`, { method: "PATCH" , credentials: "include"});
+            const res = await fetch(`${baseURL}/api/admin/startups/approve/${id}`, { method: "PATCH", headers: authHeaders(), credentials: "include" });
             const result = await res.json();
             if (result?.modifiedCount > 0) {
                 setStartups((prev) => prev.map((s) => s._id === id ? { ...s, approved: true } : s));
@@ -51,7 +52,7 @@ export default function AdminStartupsPage() {
         if (!confirm("Remove this startup permanently?")) return;
         setActionLoading(id + "_remove");
         try {
-            const res = await fetch(`${baseURL}/api/admin/startups/${id}`, { method: "DELETE" , credentials: "include"});
+            const res = await fetch(`${baseURL}/api/admin/startups/${id}`, { method: "DELETE", headers: authHeaders(), credentials: "include" });
             const result = await res.json();
             if (result?.deletedCount > 0) {
                 setStartups((prev) => prev.filter((s) => s._id !== id));

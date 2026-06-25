@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import DashboardHeading from "@/components/dashboard/DashboardHeading";
 import { Loader2, ShieldBan, ShieldCheck, Crown, RefreshCw } from "lucide-react";
 import { baseURL } from "@/lib/api/baseUrl";
+import { authHeaders } from "@/lib/api/authHeaders";
 import toast from "react-hot-toast";
 import {
     Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
@@ -17,7 +18,7 @@ export default function AdminUsersPage() {
     const fetchUsers = async () => {
         setIsLoading(true);
         try {
-            const res = await fetch(`${baseURL}/api/admin/users`, { credentials: "include" });
+            const res = await fetch(`${baseURL}/api/admin/users`, { headers: authHeaders(), credentials: "include" });
             const data = await res.json();
             setUsers(Array.isArray(data) ? data : []);
         } catch {
@@ -33,7 +34,7 @@ export default function AdminUsersPage() {
         const action = user.isBlocked ? "unblock" : "block";
         setActionLoading(user._id);
         try {
-            const res = await fetch(`${baseURL}/api/admin/users/${action}/${user._id}`, { method: "PATCH" , credentials: "include"});
+            const res = await fetch(`${baseURL}/api/admin/users/${action}/${user._id}`, { method: "PATCH", headers: authHeaders(), credentials: "include" });
             const result = await res.json();
             if (result?.modifiedCount > 0) {
                 setUsers((prev) => prev.map((u) => u._id === user._id ? { ...u, isBlocked: !u.isBlocked } : u));

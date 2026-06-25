@@ -4,20 +4,19 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSession, authClient } from "@/lib/auth-client";
-import { 
-  LayoutDashboard, 
-  Rocket, 
-  PlusCircle, 
-  Briefcase, 
-  Users2, 
-  Crown, 
-  LogOut, 
-  Home, 
-  Sparkles,
+import {
+  LayoutDashboard,
+  Rocket,
+  PlusCircle,
+  Briefcase,
+  Users2,
+  LogOut,
+  Home,
   Search,
   FileText,
-  Bookmark,
-  User
+  User,
+  ShieldCheck,
+  Receipt,
 } from "lucide-react";
 import { Logo } from "../Logo";
 
@@ -46,7 +45,14 @@ export default function DashboardSideBar({ onPremiumTrigger }) {
     { key: "profile", label: "Profile", icon: User, href: "/dashboard/collaborator/profile" },
   ];
 
-  const menuItems = userRole === "founder" ? founderMenuItems : userRole === "collaborator" ? collaboratorMenuItems : userRole === "admin" ? adminMenu : null;
+  const adminMenuItems = [
+    { key: "overview", label: "Overview", icon: ShieldCheck, href: "/dashboard/admin" },
+    { key: "users", label: "Manage Users", icon: Users2, href: "/dashboard/admin/users" },
+    { key: "startups", label: "Manage Startups", icon: Rocket, href: "/dashboard/admin/startups" },
+    { key: "transactions", label: "Transactions", icon: Receipt, href: "/dashboard/admin/transactions" },
+  ];
+
+  const menuItems = userRole === "founder" ? founderMenuItems : userRole === "collaborator" ? collaboratorMenuItems : userRole === "admin" ? adminMenuItems : founderMenuItems;
 
   return (
     <aside className="w-64 h-screen border-r border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-950 flex flex-col z-20 shrink-0 overflow-hidden">
@@ -73,7 +79,7 @@ export default function DashboardSideBar({ onPremiumTrigger }) {
               {session?.user?.name || "Frontier User"}
             </p>
             <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-[#635BFF] dark:text-[#818CF8] mt-0.5">
-              {userRole === "founder" ? "🚀 Founder" : "🤝 Collaborator"}
+              {userRole === "founder" ? "🚀 Founder" : userRole === "admin" ? "🛡️ Admin" : "🤝 Collaborator"}
             </span>
           </div>
         </div>

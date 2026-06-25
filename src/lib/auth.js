@@ -22,19 +22,29 @@ export const auth = betterAuth({
   user: {
     additionalFields: {
       role: {
+        type: "string",
         defaultValue: "collaborator",
+        input: true,
       },
       isBlocked: {
+        type: "boolean",
         defaultValue: false,
+        input: true,
       },
       isPremium: {
+        type: "boolean",
         defaultValue: false,
+        input: true,
       },
       skills: {
+        type: "string",
         defaultValue: "",
+        input: true,
       },
       bio: {
+        type: "string",
         defaultValue: "",
+        input: true,
       },
     },
   },

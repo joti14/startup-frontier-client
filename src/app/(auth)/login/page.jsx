@@ -72,7 +72,8 @@ export default function LoginPage() {
     } else {
       toast.success('Login Successful');
       const userRole = authData?.user?.role || "founder";
-      router.push(userRole === "founder" ? "/dashboard/founder" : "/dashboard/collaborator");
+      const redirectMap = { founder: "/dashboard/founder", collaborator: "/dashboard/collaborator", admin: "/dashboard/admin" };
+      router.push(redirectMap[userRole] ?? "/dashboard/founder");
     }
   };
 

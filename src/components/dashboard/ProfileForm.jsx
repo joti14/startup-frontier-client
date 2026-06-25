@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSession } from "@/lib/auth-client";
 import { useForm } from "react-hook-form";
 import { baseURL } from "@/lib/api/baseUrl";
+import { authHeaders } from "@/lib/api/authHeaders";
 import DashboardHeading from "@/components/dashboard/DashboardHeading";
 import { User, Code2, FileText, ImageIcon, Loader2, Check, ShieldAlert } from "lucide-react";
 import toast from "react-hot-toast";
@@ -33,7 +34,7 @@ export default function ProfileForm() {
     useEffect(() => {
         const email = session?.user?.email;
         if (!email) return;
-        fetch(`${baseURL}/api/users/profile/${email}`, { credentials: "include" })
+        fetch(`${baseURL}/api/users/profile/${email}`, { headers: authHeaders(), credentials: "include" })
             .then((r) => r.json())
             .then((data) => {
                 reset({ name: data?.name || "", skills: data?.skills || "", bio: data?.bio || "" });
@@ -67,7 +68,8 @@ export default function ProfileForm() {
         try {
             const res = await fetch(`${baseURL}/api/users/profile/${email}`, {
                 method: "PATCH",
-                headers: { "Content-Type": "application/json" },
+                headers: authHeaders(),
+                credentials: "include",
                 body: JSON.stringify({ ...data, image: imgState.url || undefined }),
             });
             if (!res.ok) throw new Error();

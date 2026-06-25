@@ -17,7 +17,7 @@ export default function AdminStartupsPage() {
     const fetchStartups = async () => {
         setIsLoading(true);
         try {
-            const res = await fetch(`${baseURL}/api/admin/startups`);
+            const res = await fetch(`${baseURL}/api/admin/startups`, { credentials: "include" });
             const data = await res.json();
             setStartups(Array.isArray(data) ? data : []);
         } catch {
@@ -32,7 +32,7 @@ export default function AdminStartupsPage() {
     const handleApprove = async (id) => {
         setActionLoading(id + "_approve");
         try {
-            const res = await fetch(`${baseURL}/api/admin/startups/approve/${id}`, { method: "PATCH" });
+            const res = await fetch(`${baseURL}/api/admin/startups/approve/${id}`, { method: "PATCH" , credentials: "include"});
             const result = await res.json();
             if (result?.modifiedCount > 0) {
                 setStartups((prev) => prev.map((s) => s._id === id ? { ...s, approved: true } : s));
@@ -51,7 +51,7 @@ export default function AdminStartupsPage() {
         if (!confirm("Remove this startup permanently?")) return;
         setActionLoading(id + "_remove");
         try {
-            const res = await fetch(`${baseURL}/api/admin/startups/${id}`, { method: "DELETE" });
+            const res = await fetch(`${baseURL}/api/admin/startups/${id}`, { method: "DELETE" , credentials: "include"});
             const result = await res.json();
             if (result?.deletedCount > 0) {
                 setStartups((prev) => prev.filter((s) => s._id !== id));

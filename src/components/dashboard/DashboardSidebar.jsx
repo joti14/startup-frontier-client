@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSession, authClient } from "@/lib/auth-client";
+import { useJwtSync } from "@/hooks/useJwtSync";
 import {
   LayoutDashboard,
   Rocket,
@@ -24,8 +25,10 @@ export default function DashboardSideBar({ onPremiumTrigger }) {
   const { data: session } = useSession();
   const pathname = usePathname();
   const userRole = session?.user?.role || "founder";
+  useJwtSync();
 
   const handleLogout = async () => {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, { method: "POST", credentials: "include" });
     await authClient.signOut();
     window.location.href = "/";
   };

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { authClient, signIn } from "@/lib/auth-client";
+import { baseURL } from "@/lib/api/baseUrl";
 import { Eye, EyeOff, Loader2, ShieldAlert, Sparkles } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { Input } from "@/components/ui/input";
@@ -70,8 +71,15 @@ export default function LoginPage() {
       setSubmitError(authError.message ?? "Invalid email or password.");
       setIsSubmitting(false);
     } else {
-      toast.success('Login Successful');
+      // Issue JWT and store in HTTPOnly cookie
       const userRole = authData?.user?.role || "founder";
+      await fetch(`${baseURL}/api/auth/token`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ email: authData.user.email, role: userRole }),
+      });
+      toast.success('Login Successful');
       const redirectMap = { founder: "/dashboard/founder", collaborator: "/dashboard/collaborator", admin: "/dashboard/admin" };
       router.push(redirectMap[userRole] ?? "/dashboard/founder");
     }

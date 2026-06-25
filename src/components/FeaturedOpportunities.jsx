@@ -47,7 +47,7 @@ export default async function FeaturedOpportunities() {
                         asChild
                         className="rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs tracking-wide h-11 px-8 shadow-md transition-all hover:scale-[1.01]"
                     >
-                        <Link href="/dashboard/collaborator/opportunities" className="flex items-center gap-2">
+                        <Link href="/opportunities" className="flex items-center gap-2">
                             Explore All Roles
                             <ArrowRight className="h-3.5 w-3.5" />
                         </Link>

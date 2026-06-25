@@ -20,8 +20,8 @@ export default function AdminOverviewPage() {
     useEffect(() => {
         if (!isAdmin) return;
         Promise.all([
-            fetch(`${baseURL}/api/admin/stats`).then((r) => r.json()),
-            fetch(`${baseURL}/api/admin/users`).then((r) => r.json()),
+            fetch(`${baseURL}/api/admin/stats`, { credentials: "include" }).then((r) => r.json()),
+            fetch(`${baseURL}/api/admin/users`, { credentials: "include" }).then((r) => r.json()),
         ]).then(([statsData, usersData]) => {
             setStats(statsData);
             setUsers(Array.isArray(usersData) ? usersData : []);

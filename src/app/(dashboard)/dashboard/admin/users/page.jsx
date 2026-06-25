@@ -17,7 +17,7 @@ export default function AdminUsersPage() {
     const fetchUsers = async () => {
         setIsLoading(true);
         try {
-            const res = await fetch(`${baseURL}/api/admin/users`);
+            const res = await fetch(`${baseURL}/api/admin/users`, { credentials: "include" });
             const data = await res.json();
             setUsers(Array.isArray(data) ? data : []);
         } catch {
@@ -33,7 +33,7 @@ export default function AdminUsersPage() {
         const action = user.isBlocked ? "unblock" : "block";
         setActionLoading(user._id);
         try {
-            const res = await fetch(`${baseURL}/api/admin/users/${action}/${user._id}`, { method: "PATCH" });
+            const res = await fetch(`${baseURL}/api/admin/users/${action}/${user._id}`, { method: "PATCH" , credentials: "include"});
             const result = await res.json();
             if (result?.modifiedCount > 0) {
                 setUsers((prev) => prev.map((u) => u._id === user._id ? { ...u, isBlocked: !u.isBlocked } : u));

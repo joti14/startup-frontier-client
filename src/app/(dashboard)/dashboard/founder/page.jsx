@@ -27,8 +27,8 @@ export default function FounderOverviewPage() {
             setIsLoading(true);
             try {
                 const [oppsRes, appsRes] = await Promise.all([
-                    fetch(`${baseURL}/api/opportunities/${email}`),
-                    fetch(`${baseURL}/api/applications/founder/${email}`),
+                    fetch(`${baseURL}/api/opportunities/${email}`, { credentials: "include" }),
+                    fetch(`${baseURL}/api/applications/founder/${email}`, { credentials: "include" }),
                 ]);
                 const opps = oppsRes.ok ? await oppsRes.json() : [];
                 const apps = appsRes.ok ? await appsRes.json() : [];

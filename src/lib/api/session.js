@@ -12,7 +12,6 @@ export const getUser = async () => {
 
 export const roleValidator = async (...roles) => {
   const user = await getUser();
-  if (!user || !roles.includes(user.role)) {
-    redirect('/unauthorized');
-  }
+  if (!user) redirect('/login');
+  if (!roles.includes(user.role)) redirect('/unauthorized');
 };

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { applyForOpportunity } from "@/lib/api/applications/actions";
@@ -11,6 +12,7 @@ import toast from "react-hot-toast";
 
 export default function ApplyModal({ opportunity, startup }) {
     const { data: session } = useSession();
+    const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [globalError, setGlobalError] = useState("");
@@ -67,6 +69,17 @@ export default function ApplyModal({ opportunity, startup }) {
     const isOwner = session?.user?.email && session.user.email === startup.founderEmail;
     const isFounder = session?.user?.role === "founder";
     const cannotApply = isOwner || isFounder;
+
+    if (!session?.user) {
+        return (
+            <Button
+                onClick={() => router.push(`/login?redirect=/opportunities/${opportunity._id}`)}
+                className="w-full sm:w-auto bg-[#635BFF] hover:bg-[#5249E0] text-white"
+            >
+                Apply Now
+            </Button>
+        );
+    }
 
     if (cannotApply) {
         return (

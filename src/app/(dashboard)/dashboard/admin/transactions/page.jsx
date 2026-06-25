@@ -16,7 +16,7 @@ export default function AdminTransactionsPage() {
     const fetchTransactions = async () => {
         setIsLoading(true);
         try {
-            const res = await fetch(`${baseURL}/api/admin/transactions`);
+            const res = await fetch(`${baseURL}/api/admin/transactions`, { credentials: "include" });
             const data = await res.json();
             setTransactions(Array.isArray(data) ? data : []);
         } catch {

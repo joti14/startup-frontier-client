@@ -2,18 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useSession } from "@/lib/auth-client";
 import {
-    ArrowLeft, Briefcase, Monitor, Clock, CalendarDays,
+    ArrowLeft, Monitor, Clock, CalendarDays,
     Code2, Building2, Mail, Loader2, AlertCircle
 } from "lucide-react";
 import { baseURL } from "@/lib/api/baseUrl";
 import ApplyModal from "@/components/ApplyModal";
 
-export default function OpportunityDetailPage() {
+export default function PublicOpportunityDetailPage() {
     const { id } = useParams();
     const router = useRouter();
-    const { data: session } = useSession();
     const [opportunity, setOpportunity] = useState(null);
     const [startup, setStartup] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -23,14 +21,12 @@ export default function OpportunityDetailPage() {
         const load = async () => {
             setIsLoading(true);
             try {
-                // Fetch opportunity
-                const oppRes = await fetch(`${baseURL}/api/opportunities/detail/${id}`, { credentials: "include" });
+                const oppRes = await fetch(`${baseURL}/api/opportunities/detail/${id}`);
                 const opp = oppRes.ok ? await oppRes.json() : null;
                 setOpportunity(opp);
 
-                // Fetch associated startup by founderEmail
                 if (opp?.founderEmail) {
-                    const stRes = await fetch(`${baseURL}/api/founder/${opp.founderEmail}`, { credentials: "include" });
+                    const stRes = await fetch(`${baseURL}/api/founder/${opp.founderEmail}`);
                     const st = stRes.ok ? await stRes.json() : null;
                     setStartup(st);
                 }
@@ -53,7 +49,7 @@ export default function OpportunityDetailPage() {
 
     if (!opportunity) {
         return (
-            <div className="max-w-2xl px-6 py-10 flex flex-col items-center gap-3 text-center">
+            <div className="max-w-2xl mx-auto px-6 py-10 flex flex-col items-center gap-3 text-center">
                 <AlertCircle className="w-10 h-10 text-slate-300" />
                 <p className="text-sm font-semibold text-slate-600 dark:text-slate-400">Opportunity not found.</p>
                 <button onClick={() => router.back()} className="text-xs text-[#635BFF] hover:underline">Go back</button>
@@ -61,12 +57,13 @@ export default function OpportunityDetailPage() {
         );
     }
 
-    const deadlineDate = opportunity.deadline ? new Date(opportunity.deadline).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : "—";
+    const deadlineDate = opportunity.deadline
+        ? new Date(opportunity.deadline).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+        : "—";
     const isPast = opportunity.deadline && new Date(opportunity.deadline) < new Date();
 
     return (
-        <div className="max-w-3xl px-6 py-4 space-y-5">
-            {/* Back */}
+        <div className="max-w-3xl mx-auto px-6 py-8 space-y-5">
             <button
                 onClick={() => router.back()}
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"
@@ -94,7 +91,6 @@ export default function OpportunityDetailPage() {
                     </span>
                 </div>
 
-                {/* Meta badges */}
                 <div className="flex flex-wrap gap-2">
                     {[
                         { icon: Monitor, label: opportunity.workType, color: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-900/20" },
@@ -107,7 +103,6 @@ export default function OpportunityDetailPage() {
                     ))}
                 </div>
 
-                {/* Apply button */}
                 {!isPast && startup && (
                     <div className="pt-2">
                         <ApplyModal opportunity={opportunity} startup={startup} />

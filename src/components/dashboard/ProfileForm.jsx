@@ -33,7 +33,7 @@ export default function ProfileForm() {
     useEffect(() => {
         const email = session?.user?.email;
         if (!email) return;
-        fetch(`${baseURL}/api/users/profile/${email}`)
+        fetch(`${baseURL}/api/users/profile/${email}`, { credentials: "include" })
             .then((r) => r.json())
             .then((data) => {
                 reset({ name: data?.name || "", skills: data?.skills || "", bio: data?.bio || "" });

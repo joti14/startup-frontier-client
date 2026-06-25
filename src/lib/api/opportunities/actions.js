@@ -4,6 +4,7 @@ export const addOpportunity = async (data) => {
     const res = await fetch(`${baseURL}/api/opportunities`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(data),
     });
     return res.json();
@@ -13,6 +14,7 @@ export const updateOpportunity = async (data, id) => {
     const res = await fetch(`${baseURL}/api/opportunities/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(data),
     });
     if (!res.ok) return null;
@@ -22,6 +24,7 @@ export const updateOpportunity = async (data, id) => {
 export const deleteOpportunity = async (id) => {
     const res = await fetch(`${baseURL}/api/opportunities/${id}`, {
         method: "DELETE",
+        credentials: "include",
     });
     if (!res.ok) return null;
     return res.json();

@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function OpportunityCard({ opportunity }) {
     return (
-        <Link href={`/dashboard/collaborator/opportunities/${opportunity._id}`} className="block group">
+        <Link href={`/opportunities/${opportunity._id}`} className="block group">
             <div className="h-full bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-900 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-slate-200/80 dark:hover:border-slate-800/80 transition-all duration-300 flex flex-col gap-4 cursor-pointer">
                 
                 {/* Header: Role + Startup */}

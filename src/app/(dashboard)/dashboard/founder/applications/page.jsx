@@ -32,7 +32,7 @@ export default function ApplicationsPage() {
         setIsLoading(true);
         try {
             console.log("[Applications] Fetching for founder email:", email);
-            const res = await fetch(`${baseURL}/api/applications/founder/${email}`);
+            const res = await fetch(`${baseURL}/api/applications/founder/${email}`, { credentials: "include" });
             console.log("[Applications] Response status:", res.status);
             const data = await res.json();
             console.log("[Applications] Data received:", data);

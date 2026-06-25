@@ -64,7 +64,7 @@ export default function FounderOverviewPage() {
     return (
         <div className="space-y-6 mt-6">
             <DashboardHeading
-                title={`Welcome back, ${firstName} ðŸ‘‹`}
+                title={`Welcome back, ${firstName}`}
                 description="Monitor your active roles, track incoming applications, and scale your team."
             />
 

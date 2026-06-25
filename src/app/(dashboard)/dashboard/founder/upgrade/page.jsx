@@ -49,7 +49,7 @@ export default function UpgradePage() {
     };
 
     return (
-        <div className="max-w-3xl px-6 py-4">
+        <div className="max-w-3xl py-4">
             <DashboardHeading
                 title="Upgrade to Premium"
                 description="Unlock the full potential of your founder account."
@@ -140,3 +140,4 @@ export default function UpgradePage() {
         </div>
     );
 }
+

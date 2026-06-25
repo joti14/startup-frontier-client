@@ -80,7 +80,7 @@ export default function ApplicationsPage() {
 
     return (
         <>
-        <div className="max-w-6xl px-6 py-4">
+        <div className="max-w-6xl py-4">
             <div className="flex items-center justify-between mb-2">
                 <DashboardHeading title="Applications" description="Review and manage applications for your open roles." />
                 {email && (
@@ -116,11 +116,11 @@ export default function ApplicationsPage() {
                     <p className="text-xs text-slate-400">Applications submitted to your startup&apos;s open positions will appear here.</p>
                 </div>
             ) : (
-                <div className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
-                    <Table>
+                <div className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-x-auto">
+                    <Table className="min-w-[640px]">
                         <TableHeader className="bg-slate-50 dark:bg-slate-900/50">
                             <TableRow>
-                                <TableHead className="w-[200px] text-xs font-bold uppercase text-slate-500">Applicant</TableHead>
+                                <TableHead className="text-xs font-bold uppercase text-slate-500">Applicant</TableHead>
                                 <TableHead className="text-xs font-bold uppercase text-slate-500">Role</TableHead>
                                 <TableHead className="text-xs font-bold uppercase text-slate-500">Details</TableHead>
                                 <TableHead className="text-xs font-bold uppercase text-slate-500">Status</TableHead>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { useSession } from "@/lib/auth-client";
@@ -52,7 +52,7 @@ export default function AdminOverviewPage() {
     const statCards = [
         {
             label: "Total Users",
-            value: stats?.totalUsers ?? "—",
+            value: stats?.totalUsers ?? "â€”",
             icon: Users,
             color: "text-[#635BFF]",
             bg: "bg-[#635BFF]/10",
@@ -60,7 +60,7 @@ export default function AdminOverviewPage() {
         },
         {
             label: "Total Startups",
-            value: stats?.totalStartups ?? "—",
+            value: stats?.totalStartups ?? "â€”",
             icon: Rocket,
             color: "text-indigo-500",
             bg: "bg-indigo-50 dark:bg-indigo-500/10",
@@ -68,7 +68,7 @@ export default function AdminOverviewPage() {
         },
         {
             label: "Total Opportunities",
-            value: stats?.totalOpportunities ?? "—",
+            value: stats?.totalOpportunities ?? "â€”",
             icon: Briefcase,
             color: "text-emerald-500",
             bg: "bg-emerald-50 dark:bg-emerald-500/10",
@@ -76,7 +76,7 @@ export default function AdminOverviewPage() {
         },
         {
             label: "Total Revenue",
-            value: stats?.totalRevenue != null ? `$${stats.totalRevenue.toFixed(2)}` : "—",
+            value: stats?.totalRevenue != null ? `$${stats.totalRevenue.toFixed(2)}` : "â€”",
             icon: DollarSign,
             color: "text-amber-500",
             bg: "bg-amber-50 dark:bg-amber-500/10",
@@ -85,7 +85,7 @@ export default function AdminOverviewPage() {
     ];
 
     return (
-        <div className="space-y-6 mt-6 px-6">
+        <div className="space-y-6 mt-6">
             <DashboardHeading
                 title={`Admin Overview`}
                 description="Platform-wide stats and user breakdown."
@@ -155,7 +155,7 @@ export default function AdminOverviewPage() {
                                                 className="w-7 h-7 rounded-lg object-cover shrink-0"
                                             />
                                             <div className="min-w-0">
-                                                <p className="text-xs font-semibold text-slate-900 dark:text-white truncate">{user.name || "—"}</p>
+                                                <p className="text-xs font-semibold text-slate-900 dark:text-white truncate">{user.name || "â€”"}</p>
                                                 <p className="text-[10px] text-slate-400 truncate">{user.email}</p>
                                             </div>
                                         </div>
@@ -181,3 +181,4 @@ export default function AdminOverviewPage() {
         </div>
     );
 }
+

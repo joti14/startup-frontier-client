@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import DashboardHeading from "@/components/dashboard/DashboardHeading";
@@ -49,7 +49,7 @@ export default function AdminUsersPage() {
     };
 
     return (
-        <div className="space-y-4 mt-6 px-6">
+        <div className="space-y-4 mt-6">
             <div className="flex items-center justify-between">
                 <DashboardHeading title="Manage Users" description="View, block, or unblock platform users." />
                 <button
@@ -63,8 +63,8 @@ export default function AdminUsersPage() {
             {isLoading ? (
                 <div className="flex justify-center py-16"><Loader2 className="w-6 h-6 animate-spin text-slate-400" /></div>
             ) : (
-                <div className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
-                    <Table>
+                <div className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-x-auto">
+                    <Table className="min-w-[600px]">
                         <TableHeader className="bg-slate-50 dark:bg-slate-900/50">
                             <TableRow>
                                 <TableHead className="text-xs font-bold uppercase text-slate-500">User</TableHead>
@@ -85,7 +85,7 @@ export default function AdminUsersPage() {
                                                 className="w-8 h-8 rounded-lg object-cover shrink-0"
                                             />
                                             <div>
-                                                <p className="text-sm font-semibold text-slate-900 dark:text-white">{user.name || "—"}</p>
+                                                <p className="text-sm font-semibold text-slate-900 dark:text-white">{user.name || "â€”"}</p>
                                                 <p className="text-xs text-slate-400">{user.email}</p>
                                             </div>
                                         </div>
@@ -144,3 +144,4 @@ export default function AdminUsersPage() {
         </div>
     );
 }
+

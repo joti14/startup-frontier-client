@@ -65,7 +65,7 @@ export default function OpportunityDetailPage() {
     const isPast = opportunity.deadline && new Date(opportunity.deadline) < new Date();
 
     return (
-        <div className="max-w-3xl px-6 py-4 space-y-5">
+        <div className="max-w-3xl py-4 space-y-5">
             {/* Back */}
             <button
                 onClick={() => router.back()}

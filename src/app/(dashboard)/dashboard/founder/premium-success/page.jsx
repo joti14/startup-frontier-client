@@ -1,3 +1,8 @@
+export const metadata = {
+    title: "Upgrade Successful",
+    description: "You're now a Premium founder on Startup Frontier.",
+};
+
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { stripe } from '@/lib/stripe';

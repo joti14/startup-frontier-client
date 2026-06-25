@@ -73,7 +73,7 @@ export default function AddOpportunity() {
     };
 
     return (
-        <div className="max-w-2xl px-6 py-4">
+        <div className="max-w-2xl py-4">
             <DashboardHeading
                 title="Add Opportunity"
                 description="Post a new role for your startup."
@@ -248,3 +248,4 @@ export default function AddOpportunity() {
         </div>
     );
 }
+

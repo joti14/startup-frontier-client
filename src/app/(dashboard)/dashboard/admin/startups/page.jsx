@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import DashboardHeading from "@/components/dashboard/DashboardHeading";
@@ -67,7 +67,7 @@ export default function AdminStartupsPage() {
     };
 
     return (
-        <div className="space-y-4 mt-6 px-6">
+        <div className="space-y-4 mt-6">
             <div className="flex items-center justify-between">
                 <DashboardHeading title="Manage Startups" description="Approve or remove startups from the platform." />
                 <button
@@ -86,8 +86,8 @@ export default function AdminStartupsPage() {
                     <p className="text-sm text-slate-500">No startups found.</p>
                 </div>
             ) : (
-                <div className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
-                    <Table>
+                <div className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-x-auto">
+                    <Table className="min-w-[640px]">
                         <TableHeader className="bg-slate-50 dark:bg-slate-900/50">
                             <TableRow>
                                 <TableHead className="text-xs font-bold uppercase text-slate-500">Startup</TableHead>
@@ -109,14 +109,14 @@ export default function AdminStartupsPage() {
                                                     <Rocket className="w-4 h-4 text-[#635BFF]" />
                                                 </div>
                                             )}
-                                            <p className="text-sm font-semibold text-slate-900 dark:text-white">{startup.startupName || "—"}</p>
+                                            <p className="text-sm font-semibold text-slate-900 dark:text-white">{startup.startupName || "â€”"}</p>
                                         </div>
                                     </TableCell>
                                     <TableCell className="py-3">
-                                        <p className="text-xs text-slate-600 dark:text-slate-300">{startup.founderEmail || "—"}</p>
+                                        <p className="text-xs text-slate-600 dark:text-slate-300">{startup.founderEmail || "â€”"}</p>
                                     </TableCell>
                                     <TableCell className="py-3">
-                                        <span className="text-xs text-slate-500 dark:text-slate-400">{startup.industry || "—"}</span>
+                                        <span className="text-xs text-slate-500 dark:text-slate-400">{startup.industry || "â€”"}</span>
                                     </TableCell>
                                     <TableCell className="py-3">
                                         <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wide
@@ -160,3 +160,4 @@ export default function AdminStartupsPage() {
         </div>
     );
 }
+

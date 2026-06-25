@@ -42,7 +42,7 @@ export default function MyApplicationsPage() {
     const email = session?.user?.email;
 
     return (
-        <div className="max-w-6xl px-6 py-4">
+        <div className="max-w-6xl py-4">
             <div className="flex items-center justify-between mb-6">
                 <DashboardHeading title="My Applications" description="Track the status of roles you have applied for." />
                 {email && (
@@ -140,3 +140,4 @@ export default function MyApplicationsPage() {
         </div>
     );
 }
+

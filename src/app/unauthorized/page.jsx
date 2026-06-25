@@ -1,6 +1,11 @@
 import Link from "next/link";
 import { ShieldAlert } from "lucide-react";
 
+export const metadata = {
+    title: "Access Denied | Startup Frontier",
+    description: "You don't have permission to view this page.",
+};
+
 export default function UnauthorizedPage() {
     return (
         <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-slate-50 dark:bg-[#090d16] px-6">

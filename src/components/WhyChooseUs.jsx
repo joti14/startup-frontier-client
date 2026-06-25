@@ -37,7 +37,7 @@ export default function WhyChooseUs() {
     return (
         <section className="relative w-full py-24 overflow-hidden bg-transparent">
 
-            <div className="relative z-10 max-w-5xl mx-auto px-6">
+            <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
 
                 {/* ─── HEADING ─── */}
                 <div className="text-center mb-14">

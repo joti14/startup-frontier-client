@@ -1,3 +1,8 @@
+export const metadata = {
+    title: "Browse Startups",
+    description: "Explore early-stage startups building across every industry. Find one that matches your skills.",
+};
+
 import { Suspense } from "react";
 import { fetchAllStartups } from "@/lib/api/startups/data";
 import StartupCard from "@/components/StartupCard";

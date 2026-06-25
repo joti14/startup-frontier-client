@@ -92,8 +92,8 @@ export default function LoginPage() {
         <div className="absolute bottom-[-5%] left-[-5%] w-[40rem] h-[40rem] rounded-full bg-purple-100/30 dark:bg-purple-950/10 blur-[120px]" />
       </div>
 
-      <div className="w-full max-w-[420px] relative z-10 group">
-        <div className="bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-900 rounded-3xl p-8 shadow-sm transition-all duration-300 group-hover:shadow-md group-hover:border-slate-200/60 dark:group-hover:border-slate-800/60">
+      <div className="w-full max-w-[95vw] sm:max-w-[420px] relative z-10 group">
+        <div className="bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-900 rounded-3xl p-5 sm:p-8 shadow-sm transition-all duration-300 group-hover:shadow-md group-hover:border-slate-200/60 dark:group-hover:border-slate-800/60">
           
           {/* Logo Branding */}
           <div className="flex flex-col items-center justify-center gap-2 mb-4">

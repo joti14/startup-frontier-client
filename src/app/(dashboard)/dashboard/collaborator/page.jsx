@@ -43,7 +43,7 @@ export default function CollaboratorOverview() {
     ].filter((d) => d.value > 0);
 
     return (
-        <div className="max-w-4xl px-6 py-4 space-y-6">
+        <div className="max-w-4xl py-4 space-y-6">
             <DashboardHeading
                 title={`Welcome back, ${session?.user?.name?.split(" ")[0] || "Collaborator"} 👋`}
                 description="Here's a snapshot of your collaboration activity."
@@ -133,3 +133,4 @@ export default function CollaboratorOverview() {
         </div>
     );
 }
+

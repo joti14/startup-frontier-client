@@ -131,7 +131,7 @@ export default function Navbar() {
                                         <DropdownMenuContent align="end" className="w-56 mt-2 p-1.5 rounded-2xl border border-slate-200/80 bg-white dark:border-slate-800 dark:bg-slate-950 shadow-xl shadow-slate-200/40 dark:shadow-none animate-in fade-in slide-in-from-top-2 duration-200">
                                             {/* User Info Section */}
                                             <div className="px-3 py-2.5 border-b border-slate-100 dark:border-slate-800 mb-1.5">
-                                                <p className="text-[10px] text-violet-600 dark:text-violet-400 font-bold uppercase tracking-wider">
+                                                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
                                                     {session.user.role} Account
                                                 </p>
                                                 <p className="font-bold text-slate-900 dark:text-white text-sm mt-0.5">{session.user.name}</p>
@@ -234,7 +234,7 @@ export default function Navbar() {
                         {session?.user ? (
                             <div className="space-y-0.5">
                                 <div className="px-3 py-1.5 text-[10px] text-slate-400">
-                                    <span className="text-violet-600 dark:text-violet-400 font-bold uppercase">{session.user.role}</span>
+                                    <span className="text-slate-600 dark:text-slate-300 font-bold uppercase">{session.user.role}</span>
                                     <br />
                                     Signed in as {session.user.email}
                                 </div>

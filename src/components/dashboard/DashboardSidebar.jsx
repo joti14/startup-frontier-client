@@ -18,17 +18,19 @@ import {
   User,
   ShieldCheck,
   Receipt,
+  X,
 } from "lucide-react";
 import { Logo } from "../Logo";
+import { baseURL } from "@/lib/api/baseUrl";
 
-export default function DashboardSideBar({ onPremiumTrigger }) {
+export default function DashboardSideBar({ onPremiumTrigger, onClose }) {
   const { data: session } = useSession();
   const pathname = usePathname();
   const userRole = session?.user?.role || "founder";
   useJwtSync();
 
   const handleLogout = async () => {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, { method: "POST", credentials: "include" });
+    await fetch(`${baseURL}/api/auth/logout`, { method: "POST", credentials: "include" });
     await authClient.signOut();
     window.location.href = "/";
   };
@@ -61,10 +63,15 @@ export default function DashboardSideBar({ onPremiumTrigger }) {
 
   return (
     <aside className="w-64 h-screen border-r border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-950 flex flex-col z-20 shrink-0 overflow-hidden">
-      
+
       {/* ─── BRAND LOGO BLOCK  ─── */}
-      <div className="px-6 h-15 border-b border-slate-100 dark:border-slate-900 flex items-center gap-2.5 shrink-0">
+      <div className="px-6 h-15 border-b border-slate-100 dark:border-slate-900 flex items-center justify-between gap-2.5 shrink-0">
         <Logo />
+        {onClose && (
+          <button onClick={onClose} className="lg:hidden p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors">
+            <X size={16} />
+          </button>
+        )}
       </div>
 
       {/* ─── USER IDENTIFICATION BLOCK ─── */}
@@ -100,6 +107,7 @@ export default function DashboardSideBar({ onPremiumTrigger }) {
             <Link
               key={key}
               href={href}
+              onClick={onClose}
               className={`w-full flex items-center gap-3 px-3 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 text-left cursor-pointer group ${
                 isActive 
                   ? "bg-[#EEF2FF] text-[#4F46E5] dark:bg-[#4F46E5]/15 dark:text-[#818CF8]" 

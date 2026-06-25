@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import DashboardHeading from "@/components/dashboard/DashboardHeading";
@@ -31,7 +31,7 @@ export default function AdminTransactionsPage() {
     const totalRevenue = transactions.reduce((sum, t) => sum + (t.amount || 0), 0);
 
     return (
-        <div className="space-y-4 mt-6 px-6">
+        <div className="space-y-4 mt-6">
             <div className="flex items-center justify-between">
                 <DashboardHeading title="Transactions" description="All premium upgrade payments on the platform." />
                 <button
@@ -63,8 +63,8 @@ export default function AdminTransactionsPage() {
                     <p className="text-sm text-slate-500">No transactions yet.</p>
                 </div>
             ) : (
-                <div className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
-                    <Table>
+                <div className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-x-auto">
+                    <Table className="min-w-[680px]">
                         <TableHeader className="bg-slate-50 dark:bg-slate-900/50">
                             <TableRow>
                                 <TableHead className="text-xs font-bold uppercase text-slate-500">User</TableHead>
@@ -78,17 +78,17 @@ export default function AdminTransactionsPage() {
                             {transactions.map((tx) => (
                                 <TableRow key={tx._id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/20">
                                     <TableCell className="py-3">
-                                        <p className="text-sm font-semibold text-slate-900 dark:text-white">{tx.userEmail || "—"}</p>
+                                        <p className="text-sm font-semibold text-slate-900 dark:text-white">{tx.userEmail || "â€”"}</p>
                                         <p className="text-xs text-slate-400 capitalize">{tx.paymentType || "subscription"}</p>
                                     </TableCell>
                                     <TableCell className="py-3">
                                         <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
-                                            {tx.amount != null ? `$${Number(tx.amount).toFixed(2)}` : "—"}
+                                            {tx.amount != null ? `$${Number(tx.amount).toFixed(2)}` : "â€”"}
                                         </p>
                                     </TableCell>
                                     <TableCell className="py-3">
                                         <p className="text-xs text-slate-600 dark:text-slate-300">
-                                            {tx.paidAt ? new Date(tx.paidAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) : "—"}
+                                            {tx.paidAt ? new Date(tx.paidAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) : "â€”"}
                                         </p>
                                         <p className="text-[10px] text-slate-400">
                                             {tx.paidAt ? new Date(tx.paidAt).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }) : ""}
@@ -98,12 +98,12 @@ export default function AdminTransactionsPage() {
                                         <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wide
                                             ${tx.paymentStatus === "paid" ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400" : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"}
                                         `}>
-                                            {tx.paymentStatus || "—"}
+                                            {tx.paymentStatus || "â€”"}
                                         </span>
                                     </TableCell>
                                     <TableCell className="py-3">
                                         <p className="text-[10px] font-mono text-slate-400 truncate max-w-[140px]">
-                                            {tx.transactionId || "—"}
+                                            {tx.transactionId || "â€”"}
                                         </p>
                                     </TableCell>
                                 </TableRow>
@@ -115,3 +115,4 @@ export default function AdminTransactionsPage() {
         </div>
     );
 }
+

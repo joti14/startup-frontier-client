@@ -9,7 +9,7 @@ const ManageOpportunities = async () => {
     const opportunities = await myOpportunities(session?.user?.email);
 
     return (
-        <div className="max-w-5xl px-6 py-4">
+        <div className="max-w-5xl py-4">
             <DashboardHeading title={"Manage Opportunities"} description={"View, edit, or remove your posted roles."} />
             <ManageOpportunity opportunities={opportunities} />
         </div>
@@ -17,3 +17,4 @@ const ManageOpportunities = async () => {
 };
 
 export default ManageOpportunities;
+

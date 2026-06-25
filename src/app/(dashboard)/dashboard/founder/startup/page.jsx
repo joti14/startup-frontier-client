@@ -55,7 +55,7 @@ export default function MyStartup() {
     };
 
     return (
-        <div className="max-w-2xl px-6 py-4">
+        <div className="max-w-2xl py-4">
             <DashboardHeading title={"My Startup"} description={"Create and manage your startup profile."} />
 
             {isLoading ? (

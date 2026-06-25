@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { useSession } from "@/lib/auth-client";
@@ -62,9 +62,9 @@ export default function FounderOverviewPage() {
     ];
 
     return (
-        <div className="space-y-6 mt-6 px-6">
+        <div className="space-y-6 mt-6">
             <DashboardHeading
-                title={`Welcome back, ${firstName} 👋`}
+                title={`Welcome back, ${firstName} ðŸ‘‹`}
                 description="Monitor your active roles, track incoming applications, and scale your team."
             />
 
@@ -73,7 +73,7 @@ export default function FounderOverviewPage() {
             ) : (
                 <>
                     {/* Stats */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                         {statCards.map(({ label, value, icon: Icon, color, bg }) => (
                             <div key={label} className="bg-white dark:bg-slate-950 border border-slate-100 dark:border-slate-900 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-between group">
                                 <div className="space-y-1">
@@ -176,3 +176,4 @@ export default function FounderOverviewPage() {
         </div>
     );
 }
+

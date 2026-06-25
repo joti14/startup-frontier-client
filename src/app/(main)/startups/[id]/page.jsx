@@ -5,6 +5,16 @@ import Link from "next/link";
 import { ArrowLeft, MapPin, Users, Layers, Rocket, Monitor, Clock, CalendarDays } from "lucide-react";
 import ApplyModal from "@/components/ApplyModal";
 
+export async function generateMetadata({ params }) {
+    const { id } = await params;
+    const startup = await fetchStartupById(id);
+    if (!startup) return { title: "Startup Not Found" };
+    return {
+        title: startup.startupName,
+        description: startup.description || `Learn about ${startup.startupName} and explore open roles.`,
+    };
+}
+
 export default async function StartupDetailsPage({ params }) {
     const { id } = await params;
     const startup = await fetchStartupById(id);

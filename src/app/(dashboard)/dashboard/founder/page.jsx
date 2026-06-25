@@ -1,4 +1,6 @@
 import DashboardHeading from "@/components/dashboard/DashboardHeading";
+import UpgradePremiumButton from "@/components/UpgradePremiumButton";
+import { getUser } from "@/lib/api/session";
 import { Briefcase, Users2, UserCheck, Crown } from "lucide-react";
 
 export default async function FounderOverviewPage() {
@@ -8,7 +10,10 @@ export default async function FounderOverviewPage() {
     acceptedMembers: 12,
   };
 
-  const isPremium = false; 
+ const user = await getUser();
+  const isPremium = user?.isPremium;
+
+
 
   return (
     <div className="space-y-6 mt-6 px-6">
@@ -71,16 +76,11 @@ export default async function FounderOverviewPage() {
               Unlock Unlimited Opportunity Postings
             </h3>
             <p className="text-slate-400 dark:text-slate-500 text-xs max-w-xl leading-relaxed">
-              Standard founder accounts are limited to listing <strong>3 roles</strong> simultaneously. Upgrade to our Premium tier for <strong>$49.00</strong> to host infinite team opportunities.
+              Standard founder accounts are limited to listing <strong>3 roles</strong> simultaneously. Upgrade to our Premium tier for <strong>$49.99</strong> to host infinite team opportunities.
               </p>
           </div>
           <div className="shrink-0 w-full md:w-auto">
-            <button 
-              type="button"
-              className="w-full md:w-auto px-5 py-2.5 cursor-pointer bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold shadow-sm shadow-amber-600/10 transition-all duration-200 active:scale-[0.99]"
-            >
-              Upgrade Now
-            </button>
+            <UpgradePremiumButton  />
           </div>
         </div>
       ) : (

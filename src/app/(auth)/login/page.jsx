@@ -73,12 +73,14 @@ export default function LoginPage() {
     } else {
       // Issue JWT and store in HTTPOnly cookie
       const userRole = authData?.user?.role || "founder";
-      await fetch(`${baseURL}/api/auth/token`, {
+      const tokenRes = await fetch(`${baseURL}/api/auth/token`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({ email: authData.user.email, role: userRole }),
       });
+      const tokenData = await tokenRes.json();
+      if (tokenData.token) localStorage.setItem("jwt_token", tokenData.token);
       toast.success('Login Successful');
       const redirectMap = { founder: "/dashboard/founder", collaborator: "/dashboard/collaborator", admin: "/dashboard/admin" };
       router.push(redirectMap[userRole] ?? "/dashboard/founder");

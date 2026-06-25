@@ -17,6 +17,9 @@ export function useJwtSync() {
             headers: { "Content-Type": "application/json" },
             credentials: "include",
             body: JSON.stringify({ email: session.user.email, role: session.user.role }),
-        }).catch(() => {});
+        })
+            .then(r => r.json())
+            .then(data => { if (data.token) localStorage.setItem("jwt_token", data.token); })
+            .catch(() => {});
     }, [session?.user?.email]);
 }

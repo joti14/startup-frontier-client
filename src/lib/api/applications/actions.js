@@ -1,9 +1,10 @@
 import { baseURL } from "../baseUrl";
+import { authHeaders } from "../authHeaders";
 
 export const applyForOpportunity = async (data) => {
     const res = await fetch(`${baseURL}/api/applications`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders(),
         credentials: "include",
         body: JSON.stringify(data),
     });
@@ -14,7 +15,7 @@ export const applyForOpportunity = async (data) => {
 export const updateApplicationStatus = async (id, status) => {
     const res = await fetch(`${baseURL}/api/applications/${id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders(),
         credentials: "include",
         body: JSON.stringify({ status }),
     });

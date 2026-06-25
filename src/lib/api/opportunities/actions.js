@@ -1,9 +1,10 @@
 import { baseURL } from "../baseUrl";
+import { authHeaders } from "../authHeaders";
 
 export const addOpportunity = async (data) => {
     const res = await fetch(`${baseURL}/api/opportunities`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders(),
         credentials: "include",
         body: JSON.stringify(data),
     });
@@ -13,7 +14,7 @@ export const addOpportunity = async (data) => {
 export const updateOpportunity = async (data, id) => {
     const res = await fetch(`${baseURL}/api/opportunities/${id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders(),
         credentials: "include",
         body: JSON.stringify(data),
     });
@@ -24,6 +25,7 @@ export const updateOpportunity = async (data, id) => {
 export const deleteOpportunity = async (id) => {
     const res = await fetch(`${baseURL}/api/opportunities/${id}`, {
         method: "DELETE",
+        headers: authHeaders(),
         credentials: "include",
     });
     if (!res.ok) return null;

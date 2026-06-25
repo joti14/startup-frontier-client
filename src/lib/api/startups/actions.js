@@ -1,9 +1,10 @@
 import { baseURL } from "../baseUrl";
+import { authHeaders } from "../authHeaders";
 
 export const createStartup = async (data) => {
     const res = await fetch(`${baseURL}/api/founder`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders(),
         credentials: "include",
         body: JSON.stringify(data),
     });
@@ -14,7 +15,7 @@ export const createStartup = async (data) => {
 export const updateStartup = async (data, id) => {
     const res = await fetch(`${baseURL}/api/founder/${id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders(),
         credentials: "include",
         body: JSON.stringify(data),
     });
@@ -25,6 +26,7 @@ export const updateStartup = async (data, id) => {
 export const deleteStartup = async (id) => {
     const res = await fetch(`${baseURL}/api/founder/${id}`, {
         method: "DELETE",
+        headers: authHeaders(),
         credentials: "include",
     });
     if (!res.ok) return null;

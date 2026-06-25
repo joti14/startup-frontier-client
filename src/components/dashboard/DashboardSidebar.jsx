@@ -36,6 +36,7 @@ export default function DashboardSideBar({ onPremiumTrigger }) {
     { key: "add-opportunity", label: "Add Opportunity", icon: PlusCircle, href: "/dashboard/founder/add-opportunity" },
     { key: "opportunities", label: "Manage Opportunities", icon: Briefcase, href: "/dashboard/founder/opportunities" },
     { key: "applications", label: "Applications", icon: Users2, href: "/dashboard/founder/applications" },
+    { key: "profile", label: "Profile", icon: User, href: "/dashboard/founder/profile" },
   ];
 
   const collaboratorMenuItems = [
@@ -50,6 +51,7 @@ export default function DashboardSideBar({ onPremiumTrigger }) {
     { key: "users", label: "Manage Users", icon: Users2, href: "/dashboard/admin/users" },
     { key: "startups", label: "Manage Startups", icon: Rocket, href: "/dashboard/admin/startups" },
     { key: "transactions", label: "Transactions", icon: Receipt, href: "/dashboard/admin/transactions" },
+    { key: "profile", label: "Profile", icon: User, href: "/dashboard/admin/profile" },
   ];
 
   const menuItems = userRole === "founder" ? founderMenuItems : userRole === "collaborator" ? collaboratorMenuItems : userRole === "admin" ? adminMenuItems : founderMenuItems;

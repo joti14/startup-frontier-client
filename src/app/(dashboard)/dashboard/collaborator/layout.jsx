@@ -2,7 +2,7 @@ import { roleValidator } from '@/lib/api/session';
 import React from 'react';
 
 const CollaboratorLayout = async ({children}) => {
-    await roleValidator("collaborator");
+    await roleValidator("collaborator", "admin");
     
     return children;
 };

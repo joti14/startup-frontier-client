@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 import DashboardHeading from "@/components/dashboard/DashboardHeading";
-import { Loader2, Search, Filter, RotateCcw } from "lucide-react";
-import { fetchAllOpportunities } from "@/lib/api/opportunities/data";
+import { Loader2, Search, Filter, RotateCcw, ChevronLeft, ChevronRight } from "lucide-react";
+import { baseURL } from "@/lib/api/baseUrl";
 import OpportunityCard from "@/components/OpportunityCard";
 import {
     Select,
@@ -13,25 +13,32 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
+const LIMIT = 9;
+
 export default function BrowseOpportunitiesPage() {
     const [opportunities, setOpportunities] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [totalPages, setTotalPages] = useState(1);
+    const [total, setTotal] = useState(0);
+    const [page, setPage] = useState(1);
 
-    // Search and Filter States
     const [searchQuery, setSearchQuery] = useState("");
     const [workType, setWorkType] = useState("");
     const [industry, setIndustry] = useState("");
 
-    const fetchOps = useCallback(async () => {
+    const fetchOps = useCallback(async (currentPage = 1) => {
         setIsLoading(true);
         try {
-            const params = {};
-            if (searchQuery) params.search = searchQuery;
-            if (workType && workType !== "All") params.workType = workType;
-            if (industry && industry !== "All") params.industry = industry;
+            const params = new URLSearchParams({ page: currentPage, limit: LIMIT });
+            if (searchQuery) params.set("search", searchQuery);
+            if (workType && workType !== "All") params.set("workType", workType);
+            if (industry && industry !== "All") params.set("industry", industry);
 
-            const data = await fetchAllOpportunities(params);
-            setOpportunities(Array.isArray(data) ? data : []);
+            const res = await fetch(`${baseURL}/api/opportunities?${params}`);
+            const json = await res.json();
+            setOpportunities(Array.isArray(json.data) ? json.data : []);
+            setTotal(json.total ?? 0);
+            setTotalPages(json.totalPages ?? 1);
         } catch (err) {
             console.error("Fetch error:", err);
         } finally {
@@ -39,26 +46,49 @@ export default function BrowseOpportunitiesPage() {
         }
     }, [searchQuery, workType, industry]);
 
+    // Reset to page 1 and debounce when filters change
     useEffect(() => {
-        // Debounce search
-        const timeoutId = setTimeout(() => {
-            fetchOps();
-        }, 500);
-        return () => clearTimeout(timeoutId);
-    }, [fetchOps]);
+        setPage(1);
+        const timeout = setTimeout(() => fetchOps(1), 400);
+        return () => clearTimeout(timeout);
+    }, [searchQuery, workType, industry]);
+
+    // Fetch when page changes (no debounce needed)
+    useEffect(() => {
+        fetchOps(page);
+    }, [page]);
+
+    const handlePageChange = (newPage) => {
+        if (newPage < 1 || newPage > totalPages) return;
+        setPage(newPage);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    const handleClear = () => {
+        setSearchQuery("");
+        setWorkType("");
+        setIndustry("");
+        setPage(1);
+    };
+
+    const pageNumbers = () => {
+        const pages = [];
+        const delta = 1;
+        for (let i = Math.max(1, page - delta); i <= Math.min(totalPages, page + delta); i++) {
+            pages.push(i);
+        }
+        return pages;
+    };
 
     return (
         <div className="max-w-6xl px-6 py-4">
-            <DashboardHeading 
-                title="Browse Opportunities" 
-                description="Find the perfect role to match your skills and aspirations." 
+            <DashboardHeading
+                title="Browse Opportunities"
+                description="Find the perfect role to match your skills and aspirations."
             />
 
-            {/* Filters Section */}
+            {/* Filters */}
             <div className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm mb-6 flex flex-col md:flex-row gap-4 items-end">
-
-                
-                {/* Search */}
                 <div className="flex-1 w-full flex flex-col gap-1.5">
                     <label className="text-xs font-semibold text-slate-700 dark:text-slate-400">Search</label>
                     <div className="relative">
@@ -73,9 +103,8 @@ export default function BrowseOpportunitiesPage() {
                     </div>
                 </div>
 
-                {/* Work Type Filter */}
                 <div className="w-full md:w-48 flex flex-col gap-1.5">
-                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-400 flex items-center gap-1"><Filter className="w-3 h-3"/> Work Type</label>
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-400 flex items-center gap-1"><Filter className="w-3 h-3" /> Work Type</label>
                     <Select value={workType} onValueChange={setWorkType}>
                         <SelectTrigger className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2 text-xs font-medium outline-none">
                             <SelectValue placeholder="All Work Types" />
@@ -89,9 +118,8 @@ export default function BrowseOpportunitiesPage() {
                     </Select>
                 </div>
 
-                {/* Industry Filter */}
                 <div className="w-full md:w-48 flex flex-col gap-1.5">
-                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-400 flex items-center gap-1"><Filter className="w-3 h-3"/> Industry</label>
+                    <label className="text-xs font-semibold text-slate-700 dark:text-slate-400 flex items-center gap-1"><Filter className="w-3 h-3" /> Industry</label>
                     <Select value={industry} onValueChange={setIndustry}>
                         <SelectTrigger className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2 text-xs font-medium outline-none">
                             <SelectValue placeholder="All Industries" />
@@ -110,9 +138,8 @@ export default function BrowseOpportunitiesPage() {
                     </Select>
                 </div>
 
-                {/* Refresh / Clear */}
                 <button
-                    onClick={() => { setSearchQuery(""); setWorkType(""); setIndustry(""); }}
+                    onClick={handleClear}
                     title="Clear all filters"
                     className={`flex items-center justify-center w-9 h-9 rounded-xl border transition-all duration-200 shrink-0 ${
                         searchQuery || workType || industry
@@ -122,10 +149,9 @@ export default function BrowseOpportunitiesPage() {
                 >
                     <RotateCcw className="h-3.5 w-3.5" />
                 </button>
-
             </div>
 
-            {/* Results Section */}
+            {/* Results */}
             {isLoading ? (
                 <div className="flex justify-center py-20">
                     <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
@@ -136,11 +162,67 @@ export default function BrowseOpportunitiesPage() {
                     <p className="text-xs text-slate-400 mt-1">Try adjusting your filters or search terms.</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                    {opportunities.map((opportunity) => (
-                        <OpportunityCard key={opportunity._id} opportunity={opportunity} />
-                    ))}
-                </div>
+                <>
+                    {/* Result count */}
+                    <p className="text-xs text-slate-400 mb-4">
+                        Showing <span className="font-semibold text-slate-600 dark:text-slate-300">{(page - 1) * LIMIT + 1}–{Math.min(page * LIMIT, total)}</span> of <span className="font-semibold text-slate-600 dark:text-slate-300">{total}</span> opportunities
+                    </p>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                        {opportunities.map((opportunity) => (
+                            <OpportunityCard key={opportunity._id} opportunity={opportunity} />
+                        ))}
+                    </div>
+
+                    {/* Pagination */}
+                    {totalPages > 1 && (
+                        <div className="flex items-center justify-center gap-2 mt-8">
+                            <button
+                                onClick={() => handlePageChange(page - 1)}
+                                disabled={page === 1}
+                                className="flex items-center justify-center w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-500 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                            >
+                                <ChevronLeft className="w-4 h-4" />
+                            </button>
+
+                            {page > 2 && (
+                                <>
+                                    <button onClick={() => handlePageChange(1)} className="w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-xs font-semibold text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">1</button>
+                                    {page > 3 && <span className="text-slate-400 text-xs">…</span>}
+                                </>
+                            )}
+
+                            {pageNumbers().map((p) => (
+                                <button
+                                    key={p}
+                                    onClick={() => handlePageChange(p)}
+                                    className={`w-8 h-8 rounded-lg border text-xs font-semibold transition-colors ${
+                                        p === page
+                                            ? "bg-[#635BFF] border-[#635BFF] text-white"
+                                            : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                                    }`}
+                                >
+                                    {p}
+                                </button>
+                            ))}
+
+                            {page < totalPages - 1 && (
+                                <>
+                                    {page < totalPages - 2 && <span className="text-slate-400 text-xs">…</span>}
+                                    <button onClick={() => handlePageChange(totalPages)} className="w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-xs font-semibold text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">{totalPages}</button>
+                                </>
+                            )}
+
+                            <button
+                                onClick={() => handlePageChange(page + 1)}
+                                disabled={page === totalPages}
+                                className="flex items-center justify-center w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-500 hover:text-slate-900 dark:hover:text-white hover:border-slate-300 dark:hover:border-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                            >
+                                <ChevronRight className="w-4 h-4" />
+                            </button>
+                        </div>
+                    )}
+                </>
             )}
         </div>
     );

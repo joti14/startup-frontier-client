@@ -11,7 +11,8 @@ export const fetchLatestOpportunities = async () => {
         cache: 'no-store'
     });
     if (!res.ok) return [];
-    return res.json();
+    const json = await res.json();
+    return Array.isArray(json) ? json : (json.data ?? []);
 };
 
 export const fetchAllOpportunities = async (params = {}) => {

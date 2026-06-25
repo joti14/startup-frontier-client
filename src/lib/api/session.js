@@ -10,9 +10,9 @@ export const getUser = async () => {
   return session?.user || null;
 };
 
-export const roleValidator = async (role) => {
+export const roleValidator = async (...roles) => {
   const user = await getUser();
-  if(!user || user.role !== role) {
+  if (!user || !roles.includes(user.role)) {
     redirect('/unauthorized');
   }
 };

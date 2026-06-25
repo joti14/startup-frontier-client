@@ -1,5 +1,5 @@
 import ProfileForm from "@/components/dashboard/ProfileForm";
 
-export default function CollaboratorProfile() {
+export default function FounderProfile() {
     return <ProfileForm />;
 }

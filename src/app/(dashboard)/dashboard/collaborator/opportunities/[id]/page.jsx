@@ -109,9 +109,9 @@ export default function OpportunityDetailPage() {
                 </div>
 
                 {/* Apply button */}
-                {!isPast && startup && (
+                {!isPast && (
                     <div className="pt-2">
-                        <ApplyModal opportunity={opportunity} startup={startup} />
+                        <ApplyModal opportunity={opportunity} startup={startup || { founderEmail: opportunity.founderEmail, startupName: "", _id: null }} />
                     </div>
                 )}
             </div>

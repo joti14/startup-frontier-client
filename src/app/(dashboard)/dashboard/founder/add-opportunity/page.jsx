@@ -15,6 +15,8 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { addOpportunity } from "@/lib/api/opportunities/actions";
 import { myOpportunities } from "@/lib/api/opportunities/data";
+import { baseURL } from "@/lib/api/baseUrl";
+import { authHeaders } from "@/lib/api/authHeaders";
 
 const FREE_LIMIT = 3;
 
@@ -23,8 +25,8 @@ export default function AddOpportunity() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [globalError, setGlobalError] = useState("");
     const [oppCount, setOppCount] = useState(null);
+    const [isPremium, setIsPremium] = useState(false);
 
-    const isPremium = session?.user?.isPremium;
     const isLimitReached = !isPremium && oppCount !== null && oppCount >= FREE_LIMIT;
 
     const { register, handleSubmit, reset, control, formState: { errors } } = useForm({
@@ -34,7 +36,13 @@ export default function AddOpportunity() {
     useEffect(() => {
         const email = session?.user?.email;
         if (!email) return;
-        myOpportunities(email).then((data) => setOppCount(Array.isArray(data) ? data.length : 0));
+        Promise.all([
+            myOpportunities(email),
+            fetch(`${baseURL}/api/users/profile/${email}`, { headers: authHeaders(), credentials: "include" }).then(r => r.json()),
+        ]).then(([opps, profile]) => {
+            setOppCount(Array.isArray(opps) ? opps.length : 0);
+            setIsPremium(!!profile?.isPremium);
+        });
     }, [session?.user?.email]);
 
     const onSubmitForm = async (data) => {

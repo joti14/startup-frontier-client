@@ -63,7 +63,7 @@ export default function OpportunityDetailPage() {
     }
 
     const deadlineDate = opportunity.deadline ? new Date(opportunity.deadline).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : "—";
-    const isPast = opportunity.deadline && new Date(opportunity.deadline) < new Date();
+    const isPast = opportunity.deadline && new Date(opportunity.deadline + "T23:59:59") < new Date();
 
     return (
         <div className="max-w-3xl py-4 space-y-5">

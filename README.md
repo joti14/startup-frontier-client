@@ -4,7 +4,7 @@ A full-stack platform where startup founders publish ideas, build teams, and rec
 
 ## Live Site
 
-[startup-frontier.vercel.app](https://startup-frontier.vercel.app)
+[startup-frontier.vercel.app](https://startup-frontier-client.vercel.app/)
 
 ## Repositories
 

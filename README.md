@@ -8,8 +8,8 @@ A full-stack platform where startup founders publish ideas, build teams, and rec
 
 ## Repositories
 
-- **Client:** [github.com/your-username/startup-frontier-client](https://github.com/your-username/startup-frontier-client)
-- **Server:** [github.com/your-username/startup-frontier-server](https://github.com/your-username/startup-frontier-server)
+- **Client:** [github.com/your-username/startup-frontier-client](https://github.com/joti14/startup-frontier-client)
+- **Server:** [github.com/your-username/startup-frontier-server](https://github.com/joti14/startup-frontier-server)
 
 ---
 
@@ -213,7 +213,7 @@ NODE_ENV=development
 
 ### Client
 ```bash
-git clone https://github.com/your-username/startup-frontier-client
+git clone https://github.com/joti14/startup-frontier-client
 cd startup-frontier-client
 npm install
 # create .env.local with variables above
@@ -222,7 +222,7 @@ npm run dev
 
 ### Server
 ```bash
-git clone https://github.com/your-username/startup-frontier-server
+git clone https://github.com/joti14/startup-frontier-server
 cd startup-frontier-server
 npm install
 # create .env with variables above
